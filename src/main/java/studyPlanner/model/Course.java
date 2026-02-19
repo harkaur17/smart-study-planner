@@ -29,6 +29,20 @@ public class Course {
 		return this.code;
 	}
 	
+	public void setName(String name) {
+		if(name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("Course name cannot be null.");
+		}
+		this.name = name;
+	}
+	
+	public void setCode(String code) {
+		if(code == null || code.trim().isEmpty()) {
+			throw new IllegalArgumentException("Course code cannot be null.");
+		}
+		this.code = code;
+	}
+	
 	public void addTask(Task t) {
 		if(t == null) return;
 		if(!this.tasks.contains(t)) {
@@ -37,6 +51,7 @@ public class Course {
 	}
 	
 	public void removeTask(Task t) {
+		if(t == null) return;
 		this.tasks.remove(t);
 	}
 	
@@ -52,7 +67,11 @@ public class Course {
 		sb.append(String.format("Tasks for %s (%s):\n",this.name, this.code));
 		for(int i = 0; i<this.tasks.size(); i++) {
 			Task task = this.tasks.get(i);
-			sb.append(String.format("%d. %s - %s", i+1, task.getTaskName(), task.getTaskStatus()));
+			sb.append(String.format("%d. %s - %s | Priority: %s", 
+					i+1, 
+					task.getTaskName(), 
+					task.getTaskStatus(),
+					task.getPriority()));
 			
 			if(task.getDueDate() != null) {
 				sb.append(String.format(" (Due: %s)", task.getDueDate()));
@@ -62,14 +81,6 @@ public class Course {
 		return sb.toString();
 	}
 	
-//	public void delete() {
-//		ArrayList<Task> tasksCopy = new ArrayList<>(this.tasks);
-//		for(Task task: tasksCopy) {
-//			task.removeCourse(this);
-//		}
-//		this.tasks.clear();
-//	}
-
 	public String toString() {
 		return String.format("Course Name: %s, Code: %s", this.name, this.code);
 	}
