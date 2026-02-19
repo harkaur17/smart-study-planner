@@ -43,8 +43,8 @@ public class TestTask {
 		try {
 			Task task1 = new Task("Assignment 1", "Assignment", Task.Status.TODO);
 			Task task2 = new Task("Assignment 2", "Assignment", Task.Status.IN_PROGRESS);
-			task1.updateStatus(Task.Status.IN_PROGRESS);
-			task2.updateStatus(Task.Status.DONE);
+			task1.setStatus(Task.Status.IN_PROGRESS);
+			task2.setStatus(Task.Status.DONE);
 
 			assertNotEquals(Task.Status.TODO, task1.getTaskStatus());
 			assertEquals(Task.Status.IN_PROGRESS, task1.getTaskStatus());
@@ -63,7 +63,7 @@ public class TestTask {
 		try {
 			Task task = new Task("Assignment 1", "Assignment", LocalDate.of(2025, 12, 25), Task.Status.TODO);
 			assertEquals(LocalDate.of(2025, 12, 25), task.getDueDate());
-			task.updateDueDate(LocalDate.of(2025, 12, 30));
+			task.setDueDate(LocalDate.of(2025, 12, 30));
 			assertNotEquals(LocalDate.of(2025, 12, 25), task.getDueDate());
 			assertEquals(LocalDate.of(2025, 12, 30), task.getDueDate());	
 		}
@@ -113,8 +113,10 @@ public class TestTask {
 
 			assertEquals("Task: Assignment 1\n"
 					+ "Task Type: Assignment\n"
+					+ "Status: TODO\n"
+					+ "Priority: MEDIUM\n"
 					+ "Due Date: 2025-12-25\n"
-					+ "Courses: \n"
+					+ "Courses:\n"
 					+ "  1. Course Name: OOP, Code: EECS2030\n"
 					+ "  2. Course Name: Computer Organization, Code: EECS2021\n"
 					+ "  3. Course Name: Applied Calculus 2, Code: MATH1014\n"
@@ -131,7 +133,7 @@ public class TestTask {
 		try {
 			Task task = new Task("Assignment 1", "Assignment", Task.Status.IN_PROGRESS);
 			assertNull(task.getDueDate());
-			task.updateDueDate(LocalDate.of(2025, 12, 27));
+			task.setDueDate(LocalDate.of(2025, 12, 27));
 			assertNotNull(task.getDueDate());
 			assertEquals(LocalDate.of(2025, 12, 27), task.getDueDate());
 		}
@@ -221,6 +223,8 @@ public class TestTask {
 			Task task = new Task("Assignment 1", "Assignment", LocalDate.of(2025, 12, 25), Task.Status.TODO);
 			assertEquals("Task: Assignment 1\n"
 					+ "Task Type: Assignment\n"
+					+ "Status: TODO\n"
+					+ "Priority: MEDIUM\n"
 					+ "Due Date: 2025-12-25\n",task.toString());
 		}
 		catch (IllegalArgumentException e) {
@@ -361,5 +365,51 @@ public class TestTask {
 		
 		assertEquals(0, task.getCourses().size());
 		assertEquals(0, course.getTasks().size());
+	}
+	
+	//Test 23: Test for default priority
+	@Test
+	public void TaskTest23() {
+		Task task = new Task("Task", "Type", Task.Status.TODO);
+		assertEquals(Task.Priority.MEDIUM, task.getPriority());
+	}
+
+	//Test 24: Test for priority constructor
+	@Test
+	public void TaskTest24() {
+		Task task = new Task("Task", "Type", Task.Status.TODO, Task.Priority.HIGH);
+		assertEquals(Task.Priority.HIGH, task.getPriority());
+	}
+
+	//Task 25: Test for setPriority()
+	@Test
+	public void TaskTest25() {
+		Task task = new Task("Task", "Type", Task.Status.TODO);
+		assertEquals(Task.Priority.MEDIUM, task.getPriority());
+		task.setPriority(Task.Priority.LOW);
+		assertEquals(Task.Priority.LOW, task.getPriority());
+
+	}
+
+	//Task 26: Test for null priority throws exception
+	@Test
+	public void TaskTest26() {
+		Task task = new Task("Task", "Type", Task.Status.TODO);
+		assertEquals(Task.Priority.MEDIUM, task.getPriority());
+		try {
+			task.setPriority(null);
+			fail("Expected IllegalArgumentException for null priority");
+		}
+		catch(IllegalArgumentException e) {
+			assertTrue(e.getMessage().contains("Priority"));
+		}
+
+	}
+	
+	//Test 27: Test for toString() containing priority
+	@Test
+	public void TaskTest27() {
+	    Task task = new Task("Task", "Type", Task.Status.TODO, Task.Priority.HIGH);
+	    assertTrue(task.toString().contains("Priority: HIGH"));
 	}
 }
