@@ -7,13 +7,14 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import studyPlanner.model.Task.Priority;
 import studyPlanner.persistence.*;
 
 public class StudyPlanner {
 
 	private ArrayList<Course>courses;
 	private ArrayList<Task>tasks;
-	
+
 	private static final String DATA_FILE = "studyplanner_data.json";
 
 	public StudyPlanner() {
@@ -89,7 +90,7 @@ public class StudyPlanner {
 	public void run() {
 		Scanner scanner = new Scanner(System.in);
 		boolean keepRunning = true;
-		
+
 		System.out.println("\nLoading saved data...");
 		StudyPlanner loaded = FileManager.loadData(DATA_FILE);
 		this.replaceData(loaded);
@@ -118,14 +119,17 @@ public class StudyPlanner {
 		System.out.println("6. View Tasks by Course");
 		System.out.println("7. View Tasks by Status");
 		System.out.println("8. View Tasks by Type");
-		System.out.println("9. View Upcoming Tasks");
-		System.out.println("10. View Upcoming Incomplete Tasks");
-		System.out.println("11. Delete Task");
-		System.out.println("12. Delete Course");
-		System.out.println("13. Save Data");
-		//System.out.println("14. Load Data");
-		System.out.println("15. Exit"); //update exit
-		System.out.println("Enter choice (1-15): ");
+		System.out.println("9. View Tasks by Priority");
+		System.out.println("10. View Upcoming Tasks");
+		System.out.println("11. View Upcoming Incomplete Tasks");
+		System.out.println("12. Delete Task");
+		System.out.println("13. Delete Course");
+		System.out.println("14. Edit Task");
+		System.out.println("15. Edit Course");
+		//
+		System.out.println("19. Save Data");
+		System.out.println("20. Exit"); //update exit
+		System.out.println("Enter choice (1-20): ");
 	}
 
 	public boolean handleChoice(String choice, Scanner scanner){
@@ -166,39 +170,47 @@ public class StudyPlanner {
 			return true;
 			
 		case "9":
-			viewUpcomingTasksUI(scanner);
+			viewTasksByPriorityUI(scanner);
 			return true;
 
 		case "10":
+			viewUpcomingTasksUI(scanner);
+			return true;
+
+		case "11":
 			viewUpcomingIncompleteTasksUI(scanner);
 			return true;
-			
-		case "11":
+
+		case "12":
 			deleteTaskUI(scanner);
 			return true;
-			
-		case "12":
+
+		case "13":
 			deleteCourseUI(scanner);
 			return true;
-			
-		case "13":
+
+		case "14":
+			editTaskUI(scanner);
+			return true;
+
+		case "15":
+			editCourseUI(scanner);
+			return true;
+
+		case "19":
 			saveDataUI(scanner);
 			return true;
-			
-//		case "14":
-//			loadDataUI(scanner);
-//			return true;
-			
-		case "15":
+
+		case "20":
 			saveDataOnExit();
 			return false; //ends the program
 
 		default:
-			System.out.println("Invalid choice. Please enter 1-13.");
+			System.out.println("Invalid choice. Please enter 1-20.");
 			return true;
 		}
 	}
-	
+
 	//ADD COURSE
 	public void addCourseUI(Scanner scanner) {
 		System.out.println("\nAdd New Course");
@@ -231,7 +243,7 @@ public class StudyPlanner {
 			System.out.println("Error: " + e.getMessage());
 		}
 	}
-	
+
 	//ADD TASK
 	public void addTaskUI(Scanner scanner) {
 		System.out.println("\nAdd New Task");
@@ -276,6 +288,9 @@ public class StudyPlanner {
 		//Ask user for task status
 		Task.Status status = selectStatusUI(scanner);
 
+		//Ask user for task priority
+		Task.Priority priority = selectPriorityUI(scanner);
+
 		//Ask user for any courses to add
 		ArrayList<Course> selectedCourses = selectCoursesUI(scanner);
 
@@ -289,11 +304,11 @@ public class StudyPlanner {
 		try {
 			Task task;
 			if(dueDate == null) {
-				task = new Task(name, type, status);
+				task = new Task(name, type, status, priority);
 			}
 			else {
 				LocalDate parsedDate = LocalDate.parse(dueDate);
-				task = new Task(name, type, parsedDate, status);
+				task = new Task(name, type, parsedDate, status, priority);
 			}
 
 			//Add selected courses to the task
@@ -326,6 +341,28 @@ public class StudyPlanner {
 				return Task.Status.IN_PROGRESS;
 			case "3":
 				return Task.Status.DONE;
+			default:
+				System.out.print("Invalid choice. Please enter 1-3: ");
+			}
+		}
+	}
+
+	private Task.Priority selectPriorityUI(Scanner scanner){
+		System.out.println("\nSelect Task Priority");
+		System.out.println("1. HIGH");
+		System.out.println("2. MEDIUM");
+		System.out.println("3. LOW");
+		System.out.println("Enter choice: (1-3): ");
+
+		while (true) {
+			String input = scanner.nextLine().trim();
+			switch (input) {
+			case "1":
+				return Task.Priority.HIGH;
+			case "2":
+				return Task.Priority.MEDIUM;
+			case "3":
+				return Task.Priority.LOW;
 			default:
 				System.out.print("Invalid choice. Please enter 1-3: ");
 			}
@@ -399,7 +436,7 @@ public class StudyPlanner {
 		System.out.println();
 	}
 
-	//UPDATE TASK
+	//UPDATE TASK STATUS
 	private void updateTaskStatusUI(Scanner scanner) {
 		if(this.tasks.isEmpty()) {
 			System.out.println("No tasks available to update.");
@@ -430,13 +467,15 @@ public class StudyPlanner {
 		System.out.println("Current Status: " + selectedTask.getTaskStatus());
 		System.out.println("\nSelect new status:");
 		Task.Status newStatus = selectStatusUI(scanner);
-	
-		selectedTask.updateStatus(newStatus);
+
+		selectedTask.setStatus(newStatus);
 
 		System.out.println("\nTask '" + selectedTask.getTaskName() + 
 				"' status updated from " + oldStatus + 
 				" to " + newStatus);
 	}
+
+	//TODO: ADD UPDATE TASK PRIORITY
 
 	//VIEW TASKS BY COURSE CODE
 	private void viewTasksByCourseCodeUI(Scanner scanner) {
@@ -521,8 +560,12 @@ public class StudyPlanner {
 		for(int i = 0; i<this.tasks.size(); i++) {
 			if(this.tasks.get(i).getTaskStatus().equals(status)) {
 				Task task = this.tasks.get(i);
-				//System.out.println(String.format("%d. %s - %s", count, task.getTaskName(), task.getTaskStatus()));
-				sb.append(String.format("%d. %s [%s] - %s", count, task.getTaskName(),task.getTaskType(), task.getTaskStatus()));
+				sb.append(String.format("%d. %s [%s] - %s | Priority: %s", 
+						count, 
+						task.getTaskName(),
+						task.getTaskType(), 
+						task.getTaskStatus(), 
+						task.getPriority()));
 				if(task.getDueDate() != null) {
 					sb.append(String.format(" (Due: %s)", task.getDueDate().toString()));
 				}
@@ -555,412 +598,511 @@ public class StudyPlanner {
 		return counts;
 	}
 
-	//VIEW TASKS BY TYPE
-	private void viewTasksByTypeUI(Scanner scanner) {
+	//VIEW TASKS BY PRIORITY
+	private void viewTasksByPriorityUI(Scanner scanner) {
 		if(this.tasks.isEmpty()) {
 			System.out.println("No tasks to display!");
 			return;
 		}
+		
+		System.out.println("Task Priority Summary:");
+		int[] counts = countTasksByPriority();
+		System.out.println("HIGH: " + counts[0] + " tasks");
+		System.out.println("MEDIUM: " + counts[1] + " tasks");
+		System.out.println("LOW: " + counts[2] + " tasks");
 
-		//get type summary
-		HashMap<String, Integer> typeCounts = getTaskTypeSummary();
-		displayTasksTypeSummary(typeCounts);
+		System.out.println("\nVIEW TASKS BY PRIORITY");
+		System.out.println("1. HIGH");
+		System.out.println("2. MEDIUM");
+		System.out.println("3. LOW");
+		System.out.println("4. Back to menu");
+		System.out.print("Enter choice (1-4): ");
 
-		ArrayList<String> typeList = new ArrayList<> (typeCounts.keySet());
-		System.out.println("\nSelect Task type to view details");
-		System.out.println("0. Back to Menu");
-		for(int i =0; i<typeList.size(); i++) {
-			System.out.println( i+1 + ". " + typeList.get(i) + " (" + typeCounts.get(typeList.get(i)) + " tasks)" );
-		}
+		Task.Priority selectedPriority = null;
 		while(true) {
-			try {
-				System.out.println("Enter choice (0-" + typeList.size() + "): ");
-				String input = scanner.nextLine().trim();
-				int choice = Integer.parseInt(input);
-				//switch case or if-else to check the input and do accordingly
-				if(choice == 0) {
-					return;
-				} else if(choice >= 1 && choice <= typeList.size()) {
-					String selectedType = typeList.get(choice - 1);
-					displayTasksByType(selectedType);
-					return;
-				} else {
-					System.out.println("Invalid choice. Please enter 0-" + typeList.size() + ": ");
-				}
+			String input = scanner.nextLine().trim();
+
+			switch(input) {
+			case "1":
+				selectedPriority = Task.Priority.HIGH;
+				break;
+			case "2":
+				selectedPriority = Task.Priority.MEDIUM;
+				break;
+			case "3":
+				selectedPriority = Task.Priority.LOW;
+				break;
+			case "4":
+				return;  // Back to menu
+			default:
+				System.out.print("Invalid choice. Please enter 1-4: ");
+				continue;
 			}
-			catch(NumberFormatException e) {
-				System.out.println("Please enter a valid number.");
-			}
+			break;
 		}
 
-	}
-
-	private HashMap<String, Integer> getTaskTypeSummary(){
-		HashMap<String, Integer> typeCounts = new HashMap<>();
-
-		for(Task task: this.getAllTasks()) {
-			String type = task.getTaskType();
-			if(typeCounts.containsKey(type)) {
-				typeCounts.put(type, typeCounts.get(type) + 1);
-			}
-			else {
-				typeCounts.put(type, 1);
-			}
-		}
-		return typeCounts;
-	}
-
-	private void displayTasksTypeSummary(HashMap<String, Integer> typeCounts) {
-		if(typeCounts.isEmpty()) {
-			System.out.println("No task types found");
-			return;
-		}
-
-		//convert to sorted list
-		ArrayList<String> sortedTypes = new ArrayList<>(typeCounts.keySet());
-		System.out.println("\nTask Type Summary:");
-		for(String type: sortedTypes) {
-			Integer count = typeCounts.get(type);
-			System.out.println(type + ": " + count + " task(s)");
-		}
-	}
-
-	private void displayTasksByType(String type) {
 		int count = 0;
-		StringBuilder sb = new StringBuilder();
-		for(Task task: this.tasks) {
-			if(task.getTaskType().equals(type)) {
+		for(Task task : this.tasks) {
+			if(task.getPriority() == selectedPriority) {
 				count++;
-				sb.append(String.format("%d. %s - %s",count, task.getTaskName(), task.getTaskStatus()));
+				System.out.printf("%d. %s [%s] - %s",
+						count, task.getTaskName(), task.getTaskType(), task.getTaskStatus());
 				if(task.getDueDate() != null) {
-					sb.append(String.format(" (Due: %s)",task.getDueDate().toString()));
+					System.out.printf(" (Due: %s)", task.getDueDate());
 				}
-				//Courses for a particular task
-				if(!task.getCourses().isEmpty()) {
-					sb.append("[Courses: ");
-					for(int i = 0; i< task.getCourseCount(); i++) {
-						if(i>0) sb.append(",");
-						sb.append(task.getCourses().get(i).getName());
-					}
-					sb.append("]");
-				}
-				sb.append("\n");
-			}
-		}
-		if(count == 0) {
-			System.out.println("No tasks found for type " + type);
-		} else {
-			System.out.println("\n" + type + " Tasks (" + count + " found)");
-			System.out.print(sb.toString());
-		}
-
-	}
-	
-	//TO VIEW UPCOMING TASKS
-	private void viewUpcomingTasksUI(Scanner scanner) {
-		if(this.tasks.isEmpty()){
-			System.out.println("No tasks to display");
-			return;
-		}
-		System.out.println("\nUpcoming Tasks (Next 7 Days):");
-		
-		LocalDate today = LocalDate.now();
-		LocalDate sevenDaysLater = today.plusDays(7);
-		
-		ArrayList<Task> todayTasks = new ArrayList<>();
-		ArrayList<Task> tomorrowTasks = new ArrayList<>();
-		ArrayList<Task> thisWeekTasks = new ArrayList<>();
-		ArrayList<Task> overdueTasks = new ArrayList<>();
-		
-		//Loop through the tasks and categorize them
-		for(int i = 0; i<this.tasks.size(); i++) {
-			Task t = this.tasks.get(i);
-			if(t.getDueDate() != null) {
-				if(t.getDueDate().isBefore(today)) {
-					//overdue tasks
-					overdueTasks.add(t);
-				} 
-				else if(t.getDueDate().isEqual(today)) {
-					//today tasks
-					todayTasks.add(t);
-				}
-				else if(t.getDueDate().isEqual(today.plusDays(1))){
-					//tomorrow tasks
-					tomorrowTasks.add(t);
-				}
-				else if(t.getDueDate().isBefore(sevenDaysLater) || t.getDueDate().isEqual(sevenDaysLater)) {
-					//this weeks tasks (including 7th day tasks)
-					thisWeekTasks.add(t);
-				}
-			}
-		}
-		
-		//display results
-		displayUpcomingTasks("Today", todayTasks, today);
-		displayUpcomingTasks("Tomorrow", tomorrowTasks, today);
-		displayUpcomingTasks("Next 7 Days", thisWeekTasks, today);
-		displayUpcomingTasks("Overdue", overdueTasks, today);
-		
-		int totalUpcoming = todayTasks.size() + tomorrowTasks.size() + thisWeekTasks.size();
-		System.out.println("\nSummary: " + totalUpcoming + " upcoming task(s)");
-		if(overdueTasks.size() > 0) {
-			System.out.println("Warning: " + overdueTasks.size() + " over due task(s)!");  
-		}
-	}
-	
-	//TODO: only show pending tasks (either update this or make two methods one only for pending and one for all the tasks
-	public void displayUpcomingTasks(String category, ArrayList<Task> tasks, LocalDate today) {
-		if(tasks.isEmpty()) {
-			return;
-		}
-		
-		System.out.println("--- "+ category + " ---");
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i<tasks.size(); i++) {
-			Task task = tasks.get(i);
-			sb.append(i+1 + ". ");
-			sb.append(task.getTaskName() + " [" + task.getTaskType() + "]");
-			sb.append(" - " + task.getTaskStatus());
-			
-			if(task.getDueDate() != null) {
-				long daysUntil = java.time.temporal.ChronoUnit.DAYS.between(today, task.getDueDate());
-				//sb.append(" ");
-				if(daysUntil == 0) {
-					sb.append(" (Due Today!)");
-				} else if (daysUntil == 1) {
-					sb.append(" (Due Tomorrow)");
-				} else if (daysUntil > 0) {
-					sb.append(" (Due in ").append(daysUntil).append(" days!)");
-				} else {
-					sb.append(" (Overdue by ").append(-daysUntil).append(" days!)");
-				}
-			}
-			
-			//Display course if any
-			if(!task.getCourses().isEmpty()) {
-				sb.append(" [Courses: ");
-				for(int j = 0; j<task.getCourses().size(); j ++) {
-					if(j > 0)  sb.append(", ");
-					sb.append(task.getCourses().get(j).getName());
-				}
-				sb.append("]");
-			}
-			sb.append("\n");
-		}
-		System.out.println(sb.toString());
-	}
-	
-	//VIEW UPCOMING TASKS THAT ARE PENDING OR INCOMPLETE
-	private void viewUpcomingIncompleteTasksUI(Scanner scanner) {
-		if(this.tasks.isEmpty()) {
-			System.out.println("No tasks to display!");
-			return;
-		}
-		System.out.println("\nUpcoming Incomplete Tasks (Next 7 Days)");
-		LocalDate today = LocalDate.now();
-		LocalDate sevenDaysLater = today.plusDays(7);
-		
-		ArrayList<Task> upcomingIncompleteTasks = new ArrayList<>();
-		for(Task task: this.tasks) {
-			LocalDate dueDate = task.getDueDate();
-			Task.Status status = task.getTaskStatus();
-			if(dueDate != null && 
-					(status == Task.Status.TODO || status == Task.Status.IN_PROGRESS) &&
-					(dueDate.isEqual(today) || dueDate.isAfter(today)) &&
-					(dueDate.isBefore(sevenDaysLater) || dueDate.isEqual(sevenDaysLater))) {
-					
-				upcomingIncompleteTasks.add(task);
-			}
-		}
-		
-		//Sort Tasks by dueDates; All tasks in one, ordered by due date
-		upcomingIncompleteTasks.sort((task1, task2) -> {
-			return task1.getDueDate().compareTo(task2.getDueDate());
-		});
-		displayUpcomingIncompleteTasks(upcomingIncompleteTasks, today);
-	}
-	
-	private void displayUpcomingIncompleteTasks(ArrayList<Task> tasks, LocalDate today) {
-		if(tasks.isEmpty() ) {
-			System.out.println("No upcoming incomplete tasks found!");
-			return;
-		}
-		HashMap<LocalDate, ArrayList<Task>> tasksByDate = new HashMap<>();
-		for(Task task: tasks) {
-			LocalDate dueDate = task.getDueDate();             
-			//create an arrayList for that date, if absent (e.g. : tasksByDate = { "2026-01-16":[Task1,Task2] , "2026-01-17":[Task3] }
-			tasksByDate.putIfAbsent(dueDate, new ArrayList<>());
-			tasksByDate.get(dueDate).add(task);
-		}
-		//sort dates; All tasks in one list, ordered by due date
-		ArrayList<LocalDate> sortedDates = new ArrayList<>(tasksByDate.keySet());
-		Collections.sort(sortedDates);
-		for(LocalDate date: sortedDates) {
-			String dataLabel = formatDateLabel(date, today);
-			System.out.println("\n" + dataLabel + ":");
-			ArrayList<Task> dateTasks = tasksByDate.get(date);
-			for(int i = 0; i<dateTasks.size(); i++) {
-				Task task = dateTasks.get(i);
-				System.out.print(" " + (i+1) + ". ");
-				System.out.print(task.getTaskName() + " [" + task.getTaskType() + "]");
-				System.out.print(" - " + task.getTaskStatus());
-				
-				//Show courses if any
 				if(!task.getCourses().isEmpty()) {
 					System.out.print(" [Courses: ");
-					for(int j = 0; j < task.getCourses().size(); j++) {
-						if(j>0) {
-							System.out.print(", ");
-						}
-						System.out.print(task.getCourses().get(j).getName());
+					for(int i = 0; i < task.getCourses().size(); i++) {
+						if(i > 0) System.out.print(", ");
+						System.out.print(task.getCourses().get(i).getCode());
 					}
 					System.out.print("]");
 				}
 				System.out.println();
 			}
 		}
-		System.out.println("\nFound " + tasks.size() + " upcoming incomplete task(s)");
+		
+		if(count == 0) {
+			System.out.println("No " + selectedPriority + " priority tasks found.");
+	    } else {
+	        System.out.println("\nFound " + count + " task(s) with " + selectedPriority + " priority.");
+	    }
 	}
 	
-	private String formatDateLabel(LocalDate date, LocalDate today) {
-		if(date.isEqual(today)) {
-			return date.toString() + " (Today)";
-		} else if (date.isEqual(today.plusDays(1))) {
-			return date.toString() + " (Tomorrow)";
-		} else {
-			long daysUntil = ChronoUnit.DAYS.between(today, date);
-			return date.toString() + " (In " + daysUntil + " days)";
-		}
-	}
-	
-	//DELETING TASK
-	private void deleteTaskUI(Scanner scanner) {
-		if(this.tasks.isEmpty()) {
-			System.out.print("No tasks available to delete");
-			return;
-		}
-		System.out.println("\nAvailable Tasks:");
-		System.out.print(displayAllTasks());
-		System.out.println("Select task number to delete (1-" + tasks.size() + ") or 0 to cancel: ");
-		int choice = getValidChoice(scanner, 0, tasks.size());
-		if(choice == 0) {
-			System.out.println("Delete cancelled.");
-			return;
-		}
-		
-		Task taskToDelete = tasks.get(choice-1);
-		System.out.println("\nTask to delete:");
-		System.out.println(taskToDelete.toString());
-		
-		//Confirm
-		System.out.println("Are you sure? (y/n): ");
-		if(!getYesOrNoConfirmation(scanner)) {
-			System.out.println("Delete cancelled.");
-			return;			
-		}
-		
-		//Remove task from ALL linked courses first
-		//use copy to avoid concurrentModificationException
-		ArrayList<Course> linkedCourses = new ArrayList<>(taskToDelete.getCourses());
-		for(Course course: linkedCourses) {
-			taskToDelete.removeCourse(course);
-		}
-		//Remove from Study Planner's task list
-		boolean removed = tasks.remove(taskToDelete);
-		if(removed) {
-			System.out.println("Task deleted successfully.");
-		} else {
-			System.out.println("Failed to delete task.");
-		}
-	}
-	
-	//Helper methods for delete task
-	private int getValidChoice(Scanner scanner, int min, int max) {
-		while(true) {
-			try {
-				String input = scanner.nextLine().trim();
-				int choice = Integer.parseInt(input);
-				if (choice >= min && choice <= max) {
-					return choice;
-				} else {
-					System.out.println("Invalid choice. Please enter " + min + "-" + max + ": ");
-				}
-			} catch (NumberFormatException e) {
-				System.out.println("Please enter a valid number: ");
+	private int[] countTasksByPriority() {
+		int[] counts = new int[3];
+		for(int i = 0; i<this.tasks.size(); i++) {
+			if(this.tasks.get(i).getPriority().equals(Task.Priority.HIGH)) {
+				counts[0]++;
+			}
+			else if (this.tasks.get(i).getPriority().equals(Task.Priority.MEDIUM)) {
+				counts[1]++;
+			}
+			else if (this.tasks.get(i).getPriority().equals(Task.Priority.LOW)) {
+				counts[2]++;
 			}
 		}
+		return counts;
 	}
-	
-	private boolean getYesOrNoConfirmation(Scanner scanner) {
-		while(true) {
+
+
+//VIEW TASKS BY TYPE
+private void viewTasksByTypeUI(Scanner scanner) {
+	if(this.tasks.isEmpty()) {
+		System.out.println("No tasks to display!");
+		return;
+	}
+
+	//get type summary
+	HashMap<String, Integer> typeCounts = getTaskTypeSummary();
+	displayTasksTypeSummary(typeCounts);
+
+	ArrayList<String> typeList = new ArrayList<> (typeCounts.keySet());
+	System.out.println("\nSelect Task type to view details");
+	System.out.println("0. Back to Menu");
+	for(int i =0; i<typeList.size(); i++) {
+		System.out.println( i+1 + ". " + typeList.get(i) + " (" + typeCounts.get(typeList.get(i)) + " tasks)" );
+	}
+	while(true) {
+		try {
+			System.out.println("Enter choice (0-" + typeList.size() + "): ");
 			String input = scanner.nextLine().trim();
-			if(input.equals("y") || input.equals("yes")) {
-				return true;
+			int choice = Integer.parseInt(input);
+			//switch case or if-else to check the input and do accordingly
+			if(choice == 0) {
+				return;
+			} else if(choice >= 1 && choice <= typeList.size()) {
+				String selectedType = typeList.get(choice - 1);
+				displayTasksByType(selectedType);
+				return;
+			} else {
+				System.out.println("Invalid choice. Please enter 0-" + typeList.size() + ": ");
 			}
-			else if(input.equals("n") || input.equals("no")) {
-				return false;
+		}
+		catch(NumberFormatException e) {
+			System.out.println("Please enter a valid number.");
+		}
+	}
+
+}
+
+private HashMap<String, Integer> getTaskTypeSummary(){
+	HashMap<String, Integer> typeCounts = new HashMap<>();
+
+	for(Task task: this.getAllTasks()) {
+		String type = task.getTaskType();
+		if(typeCounts.containsKey(type)) {
+			typeCounts.put(type, typeCounts.get(type) + 1);
+		}
+		else {
+			typeCounts.put(type, 1);
+		}
+	}
+	return typeCounts;
+}
+
+private void displayTasksTypeSummary(HashMap<String, Integer> typeCounts) {
+	if(typeCounts.isEmpty()) {
+		System.out.println("No task types found");
+		return;
+	}
+
+	//convert to sorted list
+	ArrayList<String> sortedTypes = new ArrayList<>(typeCounts.keySet());
+	System.out.println("\nTask Type Summary:");
+	for(String type: sortedTypes) {
+		Integer count = typeCounts.get(type);
+		System.out.println(type + ": " + count + " task(s)");
+	}
+}
+
+private void displayTasksByType(String type) {
+	int count = 0;
+	StringBuilder sb = new StringBuilder();
+	for(Task task: this.tasks) {
+		if(task.getTaskType().equals(type)) {
+			count++;
+			sb.append(String.format("%d. %s - %s | Priority: %s",
+					count, 
+					task.getTaskName(), 
+					task.getTaskStatus(),
+					task.getPriority()));
+			if(task.getDueDate() != null) {
+				sb.append(String.format(" (Due: %s)",task.getDueDate().toString()));
 			}
-			else {
-				System.out.println("Please enter 'y' or 'n': ");
+			//Courses for a particular task
+			if(!task.getCourses().isEmpty()) {
+				sb.append("[Courses: ");
+				for(int i = 0; i< task.getCourseCount(); i++) {
+					if(i>0) sb.append(",");
+					sb.append(task.getCourses().get(i).getName());
+				}
+				sb.append("]");
+			}
+			sb.append("\n");
+		}
+	}
+	if(count == 0) {
+		System.out.println("No tasks found for type " + type);
+	} else {
+		System.out.println("\n" + type + " Tasks (" + count + " found)");
+		System.out.print(sb.toString());
+	}
+
+}
+
+//TO VIEW UPCOMING TASKS
+private void viewUpcomingTasksUI(Scanner scanner) {
+	if(this.tasks.isEmpty()){
+		System.out.println("No tasks to display");
+		return;
+	}
+	System.out.println("\nUpcoming Tasks (Next 7 Days):");
+
+	LocalDate today = LocalDate.now();
+	LocalDate sevenDaysLater = today.plusDays(7);
+
+	ArrayList<Task> todayTasks = new ArrayList<>();
+	ArrayList<Task> tomorrowTasks = new ArrayList<>();
+	ArrayList<Task> thisWeekTasks = new ArrayList<>();
+	ArrayList<Task> overdueTasks = new ArrayList<>();
+
+	//Loop through the tasks and categorize them
+	for(int i = 0; i<this.tasks.size(); i++) {
+		Task t = this.tasks.get(i);
+		if(t.getDueDate() != null) {
+			if(t.getDueDate().isBefore(today)) {
+				//overdue tasks
+				overdueTasks.add(t);
+			} 
+			else if(t.getDueDate().isEqual(today)) {
+				//today tasks
+				todayTasks.add(t);
+			}
+			else if(t.getDueDate().isEqual(today.plusDays(1))){
+				//tomorrow tasks
+				tomorrowTasks.add(t);
+			}
+			else if(t.getDueDate().isBefore(sevenDaysLater) || t.getDueDate().isEqual(sevenDaysLater)) {
+				//this weeks tasks (including 7th day tasks)
+				thisWeekTasks.add(t);
 			}
 		}
 	}
-	
-	//DELETE COURSE
-	private void deleteCourseUI(Scanner scanner) {
-		if(this.courses.isEmpty()) {
-			System.out.print("No courses available to delete");
-			return;
+
+	//display results
+	displayUpcomingTasks("Today", todayTasks, today);
+	displayUpcomingTasks("Tomorrow", tomorrowTasks, today);
+	displayUpcomingTasks("Next 7 Days", thisWeekTasks, today);
+	displayUpcomingTasks("Overdue", overdueTasks, today);
+
+	int totalUpcoming = todayTasks.size() + tomorrowTasks.size() + thisWeekTasks.size();
+	System.out.println("\nSummary: " + totalUpcoming + " upcoming task(s)");
+	if(overdueTasks.size() > 0) {
+		System.out.println("Warning: " + overdueTasks.size() + " over due task(s)!");  
+	}
+}
+
+public void displayUpcomingTasks(String category, ArrayList<Task> tasks, LocalDate today) {
+	if(tasks.isEmpty()) {
+		return;
+	}
+
+	System.out.println("--- "+ category + " ---");
+	StringBuilder sb = new StringBuilder();
+	for(int i = 0; i<tasks.size(); i++) {
+		Task task = tasks.get(i);
+		sb.append(i+1 + ". ");
+		sb.append(task.getTaskName() + " [" + task.getTaskType() + "]");
+		sb.append(" - " + task.getTaskStatus());
+		sb.append(" | Priority: " + task.getPriority());
+
+		if(task.getDueDate() != null) {
+			long daysUntil = java.time.temporal.ChronoUnit.DAYS.between(today, task.getDueDate());
+			//sb.append(" ");
+			if(daysUntil == 0) {
+				sb.append(" (Due Today!)");
+			} else if (daysUntil == 1) {
+				sb.append(" (Due Tomorrow)");
+			} else if (daysUntil > 0) {
+				sb.append(" (Due in ").append(daysUntil).append(" days!)");
+			} else {
+				sb.append(" (Overdue by ").append(-daysUntil).append(" days!)");
+			}
 		}
-		System.out.println("\nAvailable Courses: ");
-		System.out.print(displayCourses());
-		System.out.println("Select course number to delete (1-" + courses.size() + ") or 0 to cancel: ");
-		int choice = getValidChoice(scanner, 0, courses.size());
-		if(choice == 0) {
-			System.out.println("Delete cancelled.");
-			return;
+
+		//Display course if any
+		if(!task.getCourses().isEmpty()) {
+			sb.append(" [Courses: ");
+			for(int j = 0; j<task.getCourses().size(); j ++) {
+				if(j > 0)  sb.append(", ");
+				sb.append(task.getCourses().get(j).getName());
+			}
+			sb.append("]");
 		}
-		
-		Course courseToDelete = courses.get(choice-1);
-		System.out.println("\nCourse to delete:");
-		System.out.println(courseToDelete.toString());
-		
-		//Confirm
-		System.out.println("Are you sure? (y/n): ");
-		if(!getYesOrNoConfirmation(scanner)) {
-			System.out.println("Delete cancelled.");
-			return;			
-		}
-		
-		//Remove course from ALL linked tasks first
-		//use copy to avoid concurrentModificationException
-		ArrayList<Task> linkedTasks = new ArrayList<>(courseToDelete.getTasks());
-		for(Task task: linkedTasks) {
-			//courseToDelete.removeTask(task);
-			task.removeCourse(courseToDelete);
-		}
-		//Remove from Study Planner's course list
-		boolean removed = courses.remove(courseToDelete);
-		if(removed) {
-			System.out.println("Course deleted successfully.");
-		} else {
-			System.out.println("Failed to delete course.");
+		sb.append("\n");
+	}
+	System.out.println(sb.toString());
+}
+
+//VIEW UPCOMING TASKS THAT ARE PENDING OR INCOMPLETE
+private void viewUpcomingIncompleteTasksUI(Scanner scanner) {
+	if(this.tasks.isEmpty()) {
+		System.out.println("No tasks to display!");
+		return;
+	}
+	System.out.println("\nUpcoming Incomplete Tasks (Next 7 Days)");
+	LocalDate today = LocalDate.now();
+	LocalDate sevenDaysLater = today.plusDays(7);
+
+	ArrayList<Task> upcomingIncompleteTasks = new ArrayList<>();
+	for(Task task: this.tasks) {
+		LocalDate dueDate = task.getDueDate();
+		Task.Status status = task.getTaskStatus();
+		if(dueDate != null && 
+				(status == Task.Status.TODO || status == Task.Status.IN_PROGRESS) &&
+				(dueDate.isEqual(today) || dueDate.isAfter(today)) &&
+				(dueDate.isBefore(sevenDaysLater) || dueDate.isEqual(sevenDaysLater))) {
+
+			upcomingIncompleteTasks.add(task);
 		}
 	}
+
+	//Sort Tasks by dueDates and secondary sort by priority
+	upcomingIncompleteTasks.sort((task1, task2) -> {
+		int dateCompare = task1.getDueDate().compareTo(task2.getDueDate());
+		if(dateCompare != 0) return dateCompare;
+		return task1.getPriority().compareTo(task2.getPriority());
+	});
+	displayUpcomingIncompleteTasks(upcomingIncompleteTasks, today);
+}
+
+private void displayUpcomingIncompleteTasks(ArrayList<Task> tasks, LocalDate today) {
+	if(tasks.isEmpty() ) {
+		System.out.println("No upcoming incomplete tasks found!");
+		return;
+	}
+	HashMap<LocalDate, ArrayList<Task>> tasksByDate = new HashMap<>();
+	for(Task task: tasks) {
+		LocalDate dueDate = task.getDueDate();             
+		//create an arrayList for that date, if absent (e.g. : tasksByDate = { "2026-01-16":[Task1,Task2] , "2026-01-17":[Task3] }
+		tasksByDate.putIfAbsent(dueDate, new ArrayList<>());
+		tasksByDate.get(dueDate).add(task);
+	}
+	//sort dates; All tasks in one list, ordered by due date
+	ArrayList<LocalDate> sortedDates = new ArrayList<>(tasksByDate.keySet());
+	Collections.sort(sortedDates);
 	
-	//SAVE DATA UI
-	private void saveDataUI(Scanner scanner) {
-		System.out.println("\nSave Data");
-		System.out.println("File will be saved to: " + DATA_FILE);
-		System.out.println("Save data? (y/n): ");
+	for(LocalDate date: sortedDates) {
 		
-		if(getYesOrNoConfirmation(scanner)) {
-			FileManager.saveData(this, DATA_FILE);
-		} else {
-			System.out.println("Save cancelled.");
+		String dataLabel = formatDateLabel(date, today);
+		System.out.println("\n" + dataLabel + ":");
+		ArrayList<Task> dateTasks = tasksByDate.get(date);
+		
+		for(int i = 0; i<dateTasks.size(); i++) {
+			
+			Task task = dateTasks.get(i);
+			System.out.print(" " + (i+1) + ". ");
+			System.out.print(task.getTaskName() + " [" + task.getTaskType() + "]");
+			System.out.print(" - " + task.getTaskStatus());
+			System.out.print(" | Priority: " + task.getPriority());
+
+			//Show courses if any
+			if(!task.getCourses().isEmpty()) {
+				System.out.print(" [Courses: ");
+				for(int j = 0; j < task.getCourses().size(); j++) {
+					if(j>0) {
+						System.out.print(", ");
+					}
+					System.out.print(task.getCourses().get(j).getName());
+				}
+				System.out.print("]");
+			}
+			System.out.println();
 		}
 	}
-	
+	System.out.println("\nFound " + tasks.size() + " upcoming incomplete task(s)");
+}
+
+private String formatDateLabel(LocalDate date, LocalDate today) {
+	if(date.isEqual(today)) {
+		return date.toString() + " (Today)";
+	} else if (date.isEqual(today.plusDays(1))) {
+		return date.toString() + " (Tomorrow)";
+	} else {
+		long daysUntil = ChronoUnit.DAYS.between(today, date);
+		return date.toString() + " (In " + daysUntil + " days)";
+	}
+}
+
+//DELETING TASK
+private void deleteTaskUI(Scanner scanner) {
+	if(this.tasks.isEmpty()) {
+		System.out.print("No tasks available to delete");
+		return;
+	}
+	System.out.println("\nAvailable Tasks:");
+	System.out.print(displayAllTasks());
+	System.out.println("Select task number to delete (1-" + tasks.size() + ") or 0 to cancel: ");
+	int choice = getValidChoice(scanner, 0, tasks.size());
+	if(choice == 0) {
+		System.out.println("Delete cancelled.");
+		return;
+	}
+
+	Task taskToDelete = tasks.get(choice-1);
+	System.out.println("\nTask to delete:");
+	System.out.println(taskToDelete.toString());
+
+	//Confirm
+	System.out.println("Are you sure? (y/n): ");
+	if(!getYesOrNoConfirmation(scanner)) {
+		System.out.println("Delete cancelled.");
+		return;			
+	}
+
+	//Remove task from ALL linked courses first
+	//use copy to avoid concurrentModificationException
+	ArrayList<Course> linkedCourses = new ArrayList<>(taskToDelete.getCourses());
+	for(Course course: linkedCourses) {
+		taskToDelete.removeCourse(course);
+	}
+	//Remove from Study Planner's task list
+	boolean removed = tasks.remove(taskToDelete);
+	if(removed) {
+		System.out.println("Task deleted successfully.");
+	} else {
+		System.out.println("Failed to delete task.");
+	}
+}
+
+//Helper methods for delete task
+private int getValidChoice(Scanner scanner, int min, int max) {
+	while(true) {
+		try {
+			String input = scanner.nextLine().trim();
+			int choice = Integer.parseInt(input);
+			if (choice >= min && choice <= max) {
+				return choice;
+			} else {
+				System.out.println("Invalid choice. Please enter " + min + "-" + max + ": ");
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Please enter a valid number: ");
+		}
+	}
+}
+
+private boolean getYesOrNoConfirmation(Scanner scanner) {
+	while(true) {
+		String input = scanner.nextLine().trim();
+		if(input.equals("y") || input.equals("yes")) {
+			return true;
+		}
+		else if(input.equals("n") || input.equals("no")) {
+			return false;
+		}
+		else {
+			System.out.println("Please enter 'y' or 'n': ");
+		}
+	}
+}
+
+//DELETE COURSE
+private void deleteCourseUI(Scanner scanner) {
+	if(this.courses.isEmpty()) {
+		System.out.print("No courses available to delete");
+		return;
+	}
+	System.out.println("\nAvailable Courses: ");
+	System.out.print(displayCourses());
+	System.out.println("Select course number to delete (1-" + courses.size() + ") or 0 to cancel: ");
+	int choice = getValidChoice(scanner, 0, courses.size());
+	if(choice == 0) {
+		System.out.println("Delete cancelled.");
+		return;
+	}
+
+	Course courseToDelete = courses.get(choice-1);
+	System.out.println("\nCourse to delete:");
+	System.out.println(courseToDelete.toString());
+
+	//Confirm
+	System.out.println("Are you sure? (y/n): ");
+	if(!getYesOrNoConfirmation(scanner)) {
+		System.out.println("Delete cancelled.");
+		return;			
+	}
+
+	//Remove course from ALL linked tasks first
+	//use copy to avoid concurrentModificationException
+	ArrayList<Task> linkedTasks = new ArrayList<>(courseToDelete.getTasks());
+	for(Task task: linkedTasks) {
+		//courseToDelete.removeTask(task);
+		task.removeCourse(courseToDelete);
+	}
+	//Remove from Study Planner's course list
+	boolean removed = courses.remove(courseToDelete);
+	if(removed) {
+		System.out.println("Course deleted successfully.");
+	} else {
+		System.out.println("Failed to delete course.");
+	}
+}
+
+//SAVE DATA UI
+private void saveDataUI(Scanner scanner) {
+	System.out.println("\nSave Data");
+	System.out.println("File will be saved to: " + DATA_FILE);
+	System.out.println("Save data? (y/n): ");
+
+	if(getYesOrNoConfirmation(scanner)) {
+		FileManager.saveData(this, DATA_FILE);
+	} else {
+		System.out.println("Save cancelled.");
+	}
+}
+
 //	//LOAD DATA UI
 //	private void loadDataUI(Scanner scanner) {
 //		System.out.println("\nLoad Data");
@@ -976,16 +1118,206 @@ public class StudyPlanner {
 //			System.out.println("Load cancelled.");
 //		}
 //	}
-	
-	private void replaceData(StudyPlanner loaded) {
-		this.courses = new ArrayList<>(loaded.getAllCourses());
-		this.tasks = new ArrayList<>(loaded.getAllTasks());
+
+private void replaceData(StudyPlanner loaded) {
+	this.courses = new ArrayList<>(loaded.getAllCourses());
+	this.tasks = new ArrayList<>(loaded.getAllTasks());
+}
+
+//SAVE DATA ON EXIT
+private void saveDataOnExit() {
+	System.out.println("\nSaving data before exit...");
+	FileManager.saveData(this, DATA_FILE);
+	System.out.println("Data saved successfully!");
+}
+
+//EDIT TASK
+private void editTaskUI(Scanner scanner) {
+	if(this.tasks.isEmpty()) {
+		System.out.println("No tasks available to edit.");
+		return;
 	}
-	
-	//SAVE DATA ON EXIT
-	private void saveDataOnExit() {
-		System.out.println("\nSaving data before exit...");
-		FileManager.saveData(this, DATA_FILE);
-		System.out.println("Data saved successfully!");
+	System.out.println("Edit a Task");
+	System.out.println("Current Tasks:");
+	for(int i = 0; i<this.tasks.size(); i++) {
+		Task task = this.tasks.get(i);
+		System.out.printf("%d %s (Type: %s, Due %s, Status: %s)%n", i+1, task.getTaskName(), task.getTaskType(), task.getDueDate(), task.getTaskStatus());
 	}
+	System.out.print("\nEnter task name to edit: ");
+	String taskName = scanner.nextLine().trim();
+
+	Task task = findTaskByName(taskName);
+	if (task == null) {
+		System.out.println("Task not found!");
+		return;
+	}
+	// Display current values
+	System.out.println("\nCurrent Task Details:");
+	System.out.println("Name: " + task.getTaskName());
+	System.out.println("Type: " + task.getTaskType());
+	System.out.println("Due Date: " + task.getDueDate());
+	System.out.println("Status: " + task.getTaskStatus());
+	System.out.println("Courses: " + task.getCourses().stream()
+			.map(Course::getCode)
+			.collect(java.util.stream.Collectors.joining(", ")));
+	System.out.print("New Task Name [" + task.getTaskName() + "]:");
+	String newName = scanner.nextLine().trim();
+	if(newName.isEmpty()) newName = null;
+
+	LocalDate newDueDate = null;
+	while(true) {
+		System.out.println("New Due Date (YYYY-MM-DD) [" + task.getDueDate() + "]");
+		String dueDateStr = scanner.nextLine().trim();
+		if(dueDateStr.isEmpty()) break; //keep current
+		try {
+			newDueDate = LocalDate.parse(dueDateStr);
+			break;
+		} catch (Exception e) {
+			System.out.println("Invalid date format. Please use YYYY-MM-DD");
+		}
+	}
+
+	Task.Status newStatus = null;
+	while(true) {
+		System.out.println("New Status (TODO/IN_PROGRESS/DONE) [" + task.getTaskStatus() + "]" );
+		String statusStr = scanner.nextLine().trim().toUpperCase();
+		if(statusStr.isEmpty()) break; //keep current
+		try {
+			newStatus = Task.Status.valueOf(statusStr);
+			break;
+		} catch(IllegalArgumentException e) {
+			System.out.println("Invalid Status. Please enter TODO, IN_PROGRESS, or DONE");
+		}
+	}
+
+	System.out.println("New Task Type [" + task.getTaskType() + "]");
+	String newTaskType = scanner.nextLine().trim();
+	if(newTaskType.isEmpty()) newTaskType = null;
+
+	System.out.println("\nEdit Priority (press Enter to skip)");
+	System.out.print("Do you want to change priority? (y/n): ");
+	String changePriority = scanner.nextLine().trim().toLowerCase();
+
+	Task.Priority newPriority = null;
+	if (changePriority.equals("y") || changePriority.equals("yes")) {
+		newPriority = selectPriorityUI(scanner);
+		System.out.println("Priority changed to: " + newPriority);
+	} else {
+		System.out.println("Keeping current priority: " + task.getPriority());
+	}
+
+	//call method to edit
+	boolean success = editTask(taskName, newName, newDueDate, newStatus, newTaskType, newPriority);
+	if(success) {
+		System.out.println("\nTask updated successfully!");
+	} else {
+		System.out.println("\nFailed to update task.");
+	}
+}
+
+public boolean editTask(String taskName, String newName, LocalDate newDueDate, Task.Status newStatus, String newTaskType, Priority newPriority) {
+	Task task = findTaskByName(taskName);
+	if(task == null) {
+		return false;
+	}
+	try {
+		if(newName != null) {
+			task.setName(newName);
+		}
+		if (newDueDate != null) {
+			task.setDueDate(newDueDate);
+		}
+		if (newStatus != null) {
+			task.setStatus(newStatus);
+		}
+		if (newTaskType != null && !newTaskType.trim().isEmpty()) {
+			task.setTaskType(newTaskType);
+		}
+		if (newPriority != null) {
+			task.setPriority(newPriority);
+		}
+		return true;
+	} catch (IllegalArgumentException e) {
+		return false;
+	}		
+}
+
+public Task findTaskByName(String taskName) {
+	if(taskName == null) return null;
+	else {
+		return tasks.stream()
+				.filter(t -> t.getTaskName().equalsIgnoreCase(taskName.trim()))
+				.findFirst()
+				.orElse(null);					
+	}
+}
+
+//EDIT COURSE
+private void editCourseUI(Scanner scanner) {
+	if(this.courses.isEmpty()) {
+		System.out.println("No courses avaialble to edit.");
+		return;
+	}
+	System.out.println("Current Courses:");
+	System.out.println(displayCourses());
+	System.out.println("\nEnter course code to edit: ");
+	String courseCode = scanner.nextLine().trim().toUpperCase();
+
+	Course course = findCourseByCode(courseCode);
+	if(course == null) {
+		System.out.println("Course not found!");
+		return;
+	}
+
+	System.out.println("\nCurrent course details:");
+	System.out.println("Name: " + course.getName());
+	System.out.println("Code: " + course.getCode());
+	System.out.println("Tasks: " + course.getTasks().size() + " task(s)");
+	System.out.println("\nEnter new values (press Enter to keep current):");
+
+	//new Name
+	System.out.println("New Course Name [" + course.getName() + "]");
+	String newName = scanner.nextLine().trim();
+	if(newName.isEmpty()) newName = null;
+
+
+	//new Code
+	System.out.print("New Course Code [" + course.getCode() + "]: ");
+	String newCode = scanner.nextLine().trim().toUpperCase();
+	if (newCode.isEmpty()) newCode = null;
+
+	boolean success = editCourse(courseCode, newName, newCode);
+	if(success) {
+		System.out.println("\nCourse updated successfully!");
+		if (newCode != null && !newCode.equals(courseCode)) {
+			System.out.println("\nNote: Course code changed from " + courseCode + " to " + newCode);
+			System.out.println("All task references have been automatically updated.");
+		}
+	} else {
+		System.out.println("\nFailed to update course.");
+	}
+
+}
+
+public boolean editCourse(String courseCode, String newName, String newCode) {
+	Course course = findCourseByCode(courseCode);
+	if(course == null) {
+		return false;
+	}
+	try {
+		if(newCode != null && !newCode.trim().isEmpty() && !newCode.trim().equalsIgnoreCase(courseCode)) {
+			Course existing = findCourseByCode(newCode.trim().toUpperCase());
+			if(existing != null) {
+				return false;
+			}
+			course.setCode(newCode);
+		}
+		if(newName != null && !newName.trim().isEmpty()){
+			course.setName(newName);
+		}
+		return true;
+	} catch(IllegalArgumentException e) {
+		return false;
+	}
+}
 }
