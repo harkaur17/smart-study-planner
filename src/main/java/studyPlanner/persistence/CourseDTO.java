@@ -9,7 +9,6 @@ public class CourseDTO {
 	private String code;
 	private List<String> taskNames;
 
-	//should the methods be public or private?
 	public CourseDTO() {
 		this.taskNames = new ArrayList<>();
 	}
