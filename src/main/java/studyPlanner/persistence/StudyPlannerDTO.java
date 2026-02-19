@@ -27,7 +27,7 @@ public class StudyPlannerDTO {
 		}
 	}
 
-	//getters
+	//GETTERS
 	public List<CourseDTO> getCourses(){
 		return new ArrayList<>(courses);
 	}
@@ -35,7 +35,17 @@ public class StudyPlannerDTO {
 	public List<TaskDTO> getTasks(){
 		return new ArrayList<>(tasks);
 	}
+	
+	public int getCourseCount() {
+		return this.courses.size();
+	}
 
+	public int getTaskCount() {
+		return this.tasks.size();
+	}
+
+
+	//SETTERS
 	public void setCourses(List<CourseDTO> courses) {
 		if(courses == null) {
 			this.courses = new ArrayList<>();
@@ -62,14 +72,6 @@ public class StudyPlannerDTO {
 		if(course != null) {
 			this.courses.add(course);
 		}
-	}
-
-	public int getCourseCount() {
-		return this.courses.size();
-	}
-
-	public int getTaskCount() {
-		return this.tasks.size();
 	}
 
 	public void clear() {
