@@ -12,6 +12,7 @@ public class TaskDTO {
 	private String dueDate;
 	private String status;
 	private List<String> courseCodes;
+	private String priority;
 	//TODO: update dueDate and status data types -> later refinement 
 
 	//Constructors
@@ -19,11 +20,12 @@ public class TaskDTO {
 		this.courseCodes = new ArrayList<>();
 	}
 
-	public TaskDTO(String taskName, String taskType, String dueDate, String status, List<String> courseCodes) {
+	public TaskDTO(String taskName, String taskType, String dueDate, String status, String priority, List<String> courseCodes) {
 		this.taskName = taskName;
 		this.taskType = taskType;
 		this.dueDate = dueDate;
 		this.status = status;
+		this.priority = priority;
 		if(courseCodes == null) {
 			this.courseCodes = new ArrayList<>();
 		} else {
@@ -47,6 +49,10 @@ public class TaskDTO {
 	public String getStatus() {
 		return this.status;
 	}
+	
+	public String getPriority() {
+		return this.priority;
+	}
 
 	public List<String> getCourseCodes() { 
 		return new ArrayList<>(courseCodes);
@@ -68,6 +74,10 @@ public class TaskDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
 
 	public void setCourseCodes(List<String> courseCodes) {
 		this.courseCodes = (courseCodes != null) ? new ArrayList<>(courseCodes) : new ArrayList<>();
@@ -85,7 +95,7 @@ public class TaskDTO {
 
 	@Override
 	public String toString() {
-		return String.format("TaskDTO{taskName='%s', taskType='%s', dueDate='%s', status='%s', courseCodes=%s}",
-				taskName, taskType, dueDate, status, courseCodes);
+		return String.format("TaskDTO{taskName='%s', taskType='%s', dueDate='%s', status='%s', priority='%s', courseCodes=%s}",
+				taskName, taskType, dueDate, status, priority, courseCodes);
 	}
 }
