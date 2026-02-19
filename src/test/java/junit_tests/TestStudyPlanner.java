@@ -95,10 +95,14 @@ public class TestStudyPlanner {
 		String result = planner.displayAllTasks();
 		assertEquals("1. Task: Assignment1\n"
 				+ "Task Type: Assignment\n"
+				+ "Status: TODO\n"
+			    + "Priority: MEDIUM\n"
 				+ "Due Date: 2025-12-28\n"
 				+ "\n"
 				+ "2. Task: Read Chapter\n"
 				+ "Task Type: Reading\n"
+				+  "Status: IN_PROGRESS\n"
+			    + "Priority: MEDIUM\n"
 				+ "\n", result);
 	}
 
@@ -188,7 +192,7 @@ public class TestStudyPlanner {
 		Task task = new Task("Assignment 1", "Homework",LocalDate.of(2025, 12, 15), Task.Status.TODO);
 		planner.addTask(task);
 		assertEquals(Task.Status.TODO, planner.getAllTasks().get(0).getTaskStatus());
-		task.updateStatus(Task.Status.IN_PROGRESS);
+		task.setStatus(Task.Status.IN_PROGRESS);
 		assertEquals(Task.Status.IN_PROGRESS, task.getTaskStatus());
 		assertEquals(Task.Status.IN_PROGRESS, planner.getAllTasks().get(0).getTaskStatus());
 	}
@@ -206,9 +210,9 @@ public class TestStudyPlanner {
 
 		assertEquals(3, planner.getAllTasks().size());
 
-		task1.updateStatus(Task.Status.IN_PROGRESS);
-		task2.updateStatus(Task.Status.DONE);
-		task3.updateStatus(Task.Status.TODO);
+		task1.setStatus(Task.Status.IN_PROGRESS);
+		task2.setStatus(Task.Status.DONE);
+		task3.setStatus(Task.Status.TODO);
 
 		assertEquals(Task.Status.IN_PROGRESS, task1.getTaskStatus());
 		assertEquals(Task.Status.DONE, task2.getTaskStatus());
@@ -322,8 +326,8 @@ public class TestStudyPlanner {
 		assertEquals(1, doneCount);
 
 		//change status of tasks
-		task1.updateStatus(Task.Status.IN_PROGRESS);
-		task2.updateStatus(Task.Status.DONE);
+		task1.setStatus(Task.Status.IN_PROGRESS);
+		task2.setStatus(Task.Status.DONE);
 
 		int todoCount2 = 0, inProgressCount2 = 0, doneCount2 = 0;
 		for(Task task: planner.getAllTasks()) {
@@ -732,4 +736,324 @@ public class TestStudyPlanner {
 	    assertTrue(standalone.removeCourseByCode("SOME101")); // Should work
 	    assertEquals(0, standalone.getCourses().size());
 	}
+	
+	//Test 27: Edit Task - Basic Name Change
+	@Test
+	public void StudyPlannerTest27() {
+        // Add a task
+        Task task = new Task("Homework", "ASSIGNMENT", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        // Edit the task name
+        boolean result = planner.editTask("Homework", "Updated Homework", null, null, null, null);
+        
+        assertTrue("Edit task name should work", result);
+        assertEquals("Updated Homework", task.getTaskName());
+    }
+
+
+    // Test 28: Edit Task - Change Due Date
+    @Test
+    public void StudyPlannerTest28() {
+        Task task = new Task("Quiz", "EXAM", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        LocalDate newDate = LocalDate.of(2024, 12, 25);
+        boolean result = planner.editTask("Quiz", null, newDate, null, null, null);
+        
+        assertTrue("Edit due date should work", result);
+        assertEquals(newDate, task.getDueDate());
+    }
+    
+    // Test 29: Edit Task - Change Status
+    @Test
+    public void StudyPlannerTest29() {
+        Task task = new Task("Project", "PROJECT", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        boolean result = planner.editTask("Project", null, null, Task.Status.IN_PROGRESS, null, null);
+        
+        assertTrue("Edit status should work", result);
+        assertEquals(Task.Status.IN_PROGRESS, task.getTaskStatus());
+    }
+    
+    // Test 30: Edit Task - Change Type
+    @Test
+    public void StudyPlannerTest30() {
+        Task task = new Task("Reading", "HOMEWORK", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        boolean result = planner.editTask("Reading", null, null, null, "READING", null);
+        
+        assertTrue("Edit type should work", result);
+        assertEquals("READING", task.getTaskType());
+    }
+    
+    // Test 31: Edit Task - Task Not Found
+    @Test
+    public void StudyPlannerTest31() {
+        // Try to edit a task that doesn't exist
+        boolean result = planner.editTask("Non-existent", "New Name", null, null, null, null);
+        
+        assertFalse("Edit non-existent task should fail", result);
+    }
+    
+    // Test 32: Edit Task - Multiple Changes
+    @Test
+    public void StudyPlannerTest32() {
+        Task task = new Task("Old Task", "OLD_TYPE", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        LocalDate newDate = LocalDate.of(2024, 12, 30);
+        boolean result = planner.editTask("Old Task", "New Task", newDate, 
+                                         Task.Status.DONE, "NEW_TYPE", null);
+        
+        assertTrue("Multiple edits should work", result);
+        assertEquals("New Task", task.getTaskName());
+        assertEquals(newDate, task.getDueDate());
+        assertEquals(Task.Status.DONE, task.getTaskStatus());
+        assertEquals("NEW_TYPE", task.getTaskType());
+    }
+    
+    // Test 33: Find Task By Name
+    @Test
+    public void StudyPlannerTest33() {
+        Task task = new Task("My Task", "TYPE", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        planner.addTask(task);
+        
+        // Test finding task
+        Task found = planner.findTaskByName("My Task");
+        assertNotNull("Should find task by name", found);
+        assertEquals("My Task", found.getTaskName());
+        
+        // Test case-insensitive
+        Task foundLower = planner.findTaskByName("my task");
+        assertNotNull("Should find task case-insensitive", foundLower);
+    }
+    
+    // Test 34: Find Task - Not Found
+    @Test
+    public void StudyPlannerTest34() {
+        Task found = planner.findTaskByName("No Such Task");
+        assertNull("Should return null for non-existent task", found);
+    }
+    
+    // ========== TESTS FOR EDIT COURSE ==========
+    
+    // Test 35: Edit Course - Change Name
+    @Test
+    public void StudyPlannerTest35() {
+        Course course = new Course("Intro to CS", "CS101");
+        planner.addCourse(course);
+        
+        boolean result = planner.editCourse("CS101", "Advanced CS", null);
+        
+        assertTrue("Edit course name should work", result);
+        assertEquals("Advanced CS", course.getName());
+    }
+    
+    // Test 36: Edit Course - Change Code
+    @Test
+    public void StudyPlannerTest36() {
+        Course course = new Course("Mathematics", "MATH101");
+        planner.addCourse(course);
+        
+        boolean result = planner.editCourse("MATH101", null, "MATH201");
+        
+        assertTrue("Edit course code should work", result);
+        assertEquals("MATH201", course.getCode());
+    }
+    
+    // Test 37: Edit Course - Change Both
+    @Test
+    public void StudyPlannerTest37() {
+        Course course = new Course("Physics", "PHY101");
+        planner.addCourse(course);
+        
+        boolean result = planner.editCourse("PHY101", "Advanced Physics", "PHY201");
+        
+        assertTrue("Edit both name and code should work", result);
+        assertEquals("Advanced Physics", course.getName());
+        assertEquals("PHY201", course.getCode());
+    }
+    
+    // Test 38: Edit Course - Course Not Found
+    @Test
+    public void StudyPlannerTest38() {
+        boolean result = planner.editCourse("CS999", "New Name", "NEW101");
+        
+        assertFalse("Edit non-existent course should fail", result);
+    }
+    
+    // Test 39: Edit Course - Duplicate Code Should Fail
+    @Test
+    public void StudyPlannerTest39() {
+        // Add two courses
+        Course course1 = new Course("Course 1", "CSE101");
+        Course course2 = new Course("Course 2", "CSE102");
+        planner.addCourse(course1);
+        planner.addCourse(course2);
+        
+        // Try to change CSE101 to CSE102 (duplicate)
+        boolean result = planner.editCourse("CSE101", null, "CSE102");
+        
+        assertFalse("Edit to duplicate code should fail", result);
+        assertEquals("CSE101", course1.getCode()); // Should stay unchanged
+    }
+    
+    // Test 40: Edit Course - Same Code (No Change)
+    @Test
+    public void StudyPlannerTest40() {
+        Course course = new Course("Chemistry", "CHEM101");
+        planner.addCourse(course);
+        
+        boolean result = planner.editCourse("CHEM101", "Advanced Chemistry", "CHEM101");
+        
+        assertTrue("Edit with same code should work", result);
+        assertEquals("Advanced Chemistry", course.getName());
+        assertEquals("CHEM101", course.getCode()); // Same code
+    }
+    
+    // Test 41: Find Course By Code
+    @Test
+    public void StudyPlannerTest41() {
+        Course course = new Course("Biology", "BIO101");
+        planner.addCourse(course);
+        
+        Course found = planner.findCourseByCode("BIO101");
+        assertNotNull("Should find course by code", found);
+        assertEquals("BIO101", found.getCode());
+        
+        // Test case-insensitive
+        Course foundLower = planner.findCourseByCode("bio101");
+        assertNotNull("Should find course case-insensitive", foundLower);
+    }
+    
+    // Test 42: Find Course - Not Found
+    @Test
+    public void StudyPlannerTest42() {
+        Course found = planner.findCourseByCode("XYZ999");
+        assertNull("Should return null for non-existent course", found);
+    }
+    
+    // Test 43: Edit Task With Courses Linked
+    @Test
+    public void StudyPlannerTest43() {
+        // Create course and task
+        Course course = new Course("Programming", "PROG101");
+        planner.addCourse(course);
+        
+        Task task = new Task("Assignment", "HW", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        task.addCourse(course);
+        planner.addTask(task);
+        
+        // Edit the task
+        boolean result = planner.editTask("Assignment", "Updated Assignment", null, null, null, null);
+        
+        assertTrue("Edit should work even with linked course", result);
+        assertEquals("Updated Assignment", task.getTaskName());
+        
+        // Check course still linked
+        assertEquals(1, task.getCourses().size());
+        assertTrue(task.getCourses().contains(course));
+    }
+    
+    // Test 44: Edit Course With Tasks Linked
+    @Test
+    public void StudyPlannerTest44() {
+        // Create course with task
+        Course course = new Course("Database", "DB101");
+        planner.addCourse(course);
+        
+        Task task = new Task("Project", "PROJECT", 
+                           LocalDate.of(2024, 12, 20), Task.Status.TODO);
+        task.addCourse(course);
+        planner.addTask(task);
+        
+        // Edit the course
+        boolean result = planner.editCourse("DB101", "Advanced Database", "DB201");
+        
+        assertTrue("Edit should work even with linked task", result);
+        assertEquals("Advanced Database", course.getName());
+        assertEquals("DB201", course.getCode());
+        
+        // Check task still linked to same course object
+        assertEquals(1, task.getCourses().size());
+        assertTrue(task.getCourses().contains(course));
+    }
+    
+    //Test 45: Edit Task Priority
+ // Edit task priority
+    @Test
+    public void StudyPlannerTest45() {
+        Task task = new Task("Task", "Type", Task.Status.TODO, Task.Priority.LOW);
+        planner.addTask(task);
+        
+        boolean result = planner.editTask("Task", null, null, null, null, Task.Priority.HIGH);
+        
+        assertTrue(result);
+        assertEquals(Task.Priority.HIGH, task.getPriority());
+    }
+
+    //Test 46: Filter tasks by priority
+    @Test
+    public void StudyPlannerTest46() {
+        planner.addTask(new Task("Task1", "Type", Task.Status.TODO, Task.Priority.HIGH));
+        planner.addTask(new Task("Task2", "Type", Task.Status.TODO, Task.Priority.HIGH));
+        planner.addTask(new Task("Task3", "Type", Task.Status.TODO, Task.Priority.LOW));
+        
+        long highCount = planner.getAllTasks().stream()
+            .filter(t -> t.getPriority() == Task.Priority.HIGH)
+            .count();
+        
+        assertEquals(2, highCount);
+    }
+
+    //Test 47: findTaskByName() with null input
+    @Test
+    public void StudyPlannerTest47() {
+        Task found = planner.findTaskByName(null);
+        assertNull(found);
+    }
+    
+    //Test 48: findCourseByCode() with null input
+    @Test
+    public void StudyPlannerTest48() {
+        Course found = planner.findCourseByCode(null);
+        assertNull(found);
+    }
+    
+    //Test 49: Test for upcoming incomplete tasks with priority sort
+    @Test
+    public void StudyPlannerTest49() {
+    	LocalDate today = LocalDate.now();
+    	
+    	Task lowTask = new Task("Low", "Type", today, Task.Status.TODO, Task.Priority.LOW);
+    	Task mediumTask = new Task("Medium", "Type", today, Task.Status.TODO, Task.Priority.MEDIUM);
+    	Task highTask = new Task("High", "Type", today, Task.Status.TODO, Task.Priority.HIGH);
+
+    	planner.addTask(lowTask);
+    	planner.addTask(mediumTask);
+    	planner.addTask(highTask);
+    	
+    	ArrayList<Task> tasks = new ArrayList<>(planner.getAllTasks());
+    	tasks.sort((t1, t2)->{
+    		int dateCompare = t1.getDueDate().compareTo(t2.getDueDate());
+    		if(dateCompare != 0) return dateCompare;
+    		return t1.getPriority().compareTo(t2.getPriority());
+    	});
+    	
+    	//HIGH = 0, MEDIUM = 1, LOW = 2 (in enum order)
+    	assertEquals(Task.Priority.HIGH, tasks.get(0).getPriority());
+        assertEquals(Task.Priority.MEDIUM, tasks.get(1).getPriority());
+        assertEquals(Task.Priority.LOW, tasks.get(2).getPriority());
+    }
+	
 }
