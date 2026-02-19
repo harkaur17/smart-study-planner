@@ -9,6 +9,14 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
+//FileManager helps to save data to a file and loading it back when the program starts again.
+/*
+ * SAVING:
+ * Course/Task objects  →  DTO objects  →  JSON string  →  File
+ * 
+ * LOADING:
+ * File  →  JSON string  →  DTO objects  →  Task/Course objects
+ */
 public class FileManager {
 
 	//Declare Gson as static field
@@ -25,9 +33,6 @@ public class FileManager {
 		c.setCode(course.getCode());
 
 		List<String> tNames = new ArrayList<String>();
-		//		for(int i = 0; i<course.getTasks().size(); i++) {
-		//			tNames.add(course.getTasks().get(i).getTaskName());
-		//		}
 		for(Task task : course.getTasks()) {
 			tNames.add(task.getTaskName());
 		}
@@ -39,9 +44,11 @@ public class FileManager {
 		TaskDTO t = new TaskDTO();
 		t.setTaskName(task.getTaskName());
 		t.setTaskType(task.getTaskType());
+		t.setPriority(task.getPriority().name());
 
 		List<String> cNames = new ArrayList<String>();
 		for(Course course : task.getCourses()) {
+			//only stores codes to avoid circular reference
 			cNames.add(course.getCode());
 		}
 		t.setCourseCodes(cNames);
@@ -102,6 +109,10 @@ public class FileManager {
 				} else {
 					task = new Task(taskDTO.getTaskName(), taskDTO.getTaskType(), status);
 				}
+				if(taskDTO.getPriority() != null && !taskDTO.getPriority().isEmpty()) {
+					task.setPriority(Task.Priority.valueOf(taskDTO.getPriority()));
+				}
+
 				planner.addTask(task);
 				taskMap.put(taskDTO.getTaskName(), task);
 			} catch (IllegalArgumentException e) {
