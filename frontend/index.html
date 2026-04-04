@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Smart Study Planner</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="brand">Smart Study Planner</span>
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="tasks.html">Tasks</a></li>
+      </ul>
+    </nav>
+
+    <main class="wrapper">
+      <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p>Welcome to your personal study planner.</p>
+    </div>
+
+      <div class="dashboard-layout">
+        <!--left side - main content-->
+        <div class="main-content">
+          <!--stats div-->
+          <div class="stats">
+            <div class="stat-card">
+              <h2>Total Courses</h2>
+              <p class="stat-number">0</p>
+            </div>
+            <div class="stat-card">
+              <h2>Total Tasks</h2>
+              <p class="stat-number">0</p>
+            </div>
+            <div class="stat-card">
+              <h2>Upcoming Tasks</h2>
+              <p class="stat-number">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!--right side - upcoming tasks section-->
+        <div class="upcoming-section">
+          <h2>Upcoming Tasks This Week</h2>
+          <div class="upcoming-tasks">
+            <div class="task-card">
+              <div class="card-info">
+                <h3>Assignment 1</h3>
+                <p>EECS 2030</p>
+                <p>2026-04-04</p>
+              </div>
+            </div>
+
+            <div class="task-card">
+              <div class="card-info">
+                <h3>Midterm</h3>
+                <p>EECS 2021</p>
+                <p>2026-04-04</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
