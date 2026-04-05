@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
@@ -26,33 +26,10 @@
         <button>Add Task</button>
       </div>
 
-      <div class="card-list">
-        <div class="task-card">
-          <div class="card-info">
-            <h3>Assignment 1</h3>
-            <p>EECS 2030</p>
-            <p>IN PROGRESS</p>
-            <p>2026-04-04</p>
-          </div>
-          <div class="button-group">
-            <button class="btn-edit">Edit</button>
-            <button class="btn-delete">Delete</button>
-          </div>
-        </div>
-
-        <div class="task-card">
-          <div class="card-info">
-            <h3>Midterm</h3>
-            <p>EECS 2021</p>
-            <p>TODO</p>
-            <p>2026-04-04</p>
-          </div>
-          <div class="button-group">
-            <button class="btn-edit">Edit</button>
-            <button class="btn-delete">Delete</button>
-          </div>
-        </div>
+      <div class="card-list" id = "task-list">
+        <!--tasks list here-->
       </div>
     </main>
+    <script src = "js/tasks.js"></script>
   </body>
 </html>
