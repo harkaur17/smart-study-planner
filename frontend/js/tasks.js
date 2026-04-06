@@ -15,6 +15,62 @@ let tasks = [
   },
 ];
 
+//Get modal elements
+const modal = document.querySelector(".modal");
+const addTaskBtn = document.querySelector(".header-card button");
+const cancelBtn = document.getElementById("cancel-task");
+const saveBtn = document.getElementById("save-task");
+
+//open modal
+addTaskBtn.addEventListener("click", function () {
+  modal.style.display = "flex";
+});
+
+//close modal - cancel button
+cancelBtn.addEventListener("click", function () {
+  modal.style.display = "none";
+});
+
+//class modal - clicking outside
+modal.addEventListener("click", function (event) {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
+saveBtn.addEventListener("click", function () {
+  //Read values from form fields
+  const name = document.getElementById("task-name").value;
+  const type = document.getElementById("task-type").value;
+  const course = document.getElementById("course-code").value;
+  const dueDate = document.getElementById("due-date").value;
+  const status = document.getElementById("task-status").value;
+  const priority = document.getElementById("task-priority").value;
+
+  // Validate
+  if (name.trim() === "") {
+    alert("Task name is required!");
+    return;
+  }
+
+  //Create new task object
+  const newTask = {
+    name: name,
+    type: type,
+    course: course,
+    status: status,
+    priority: priority,
+    dueDate: dueDate,
+  };
+
+  //Add to tasks array
+  tasks.push(newTask);
+  modal.style.display = "none";
+  renderTasks();
+
+  document.getElementById("add-task-form").reset();
+});
+
 function renderTasks() {
   const taskList = document.getElementById("task-list");
   taskList.innerHTML = ""; //clear the first list
@@ -39,11 +95,11 @@ function renderTasks() {
   });
 }
 
-function deleteTask(taskName){
-    tasks=tasks.filter(function(task){
-        return task.name !== taskName;
-    });
-    renderTasks();
+function deleteTask(taskName) {
+  tasks = tasks.filter(function (task) {
+    return task.name !== taskName;
+  });
+  renderTasks();
 }
 
 renderTasks();

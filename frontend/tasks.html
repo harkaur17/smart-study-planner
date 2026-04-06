@@ -26,10 +26,67 @@
         <button>Add Task</button>
       </div>
 
-      <div class="card-list" id = "task-list">
+      <div class="card-list" id="task-list">
         <!--tasks list here-->
       </div>
+
+      <div class="modal">
+        <div class="modal-content">
+          <form id="add-task-form">
+            <div class="form-group">
+              <label for="task-name">Task Name</label>
+              <input type="text" id="task-name" placeholder="Enter task name" />
+            </div>
+
+            <div class="form-group">
+              <label for="task-type">Task Type</label>
+              <input type="text" id="task-type" placeholder="Enter task type" />
+              <!--TODO: option to add tasks types, added by the user-->
+            </div>
+
+            <div class="form-group">
+              <label for="course-code">Course Code</label>
+              <!--TODO: select from the courses in the database-->
+              <input
+                type="text"
+                id="course-code"
+                placeholder="Enter course code"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="due-date">Due Date</label>
+              <input type="date" id="due-date" />
+            </div>
+
+            <div class="form-group">
+              <label for="task-status">Task Status</label>
+              <select id="task-status">
+                <option value="" disabled selected>Select status</option>
+                <option value="TODO">TODO</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="DONE">DONE</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-priority">Task Priority</label>
+              <select id="task-priority">
+                <option value="" disabled selected>Select priority</option>
+                <option value="HIGH">HIGH</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="LOW">LOW</option>
+              </select>
+            </div>
+          </form>
+
+          <div class="button-group">
+            <button id="cancel-task">Cancel</button>
+            <button id="save-task">Save</button>
+          </div>
+        </div>
+      </div>
     </main>
-    <script src = "js/tasks.js"></script>
+    <script src="js/tasks.js"></script>
   </body>
 </html>
