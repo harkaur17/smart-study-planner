@@ -38,6 +38,7 @@ modal.addEventListener("click", function (event) {
   }
 });
 
+//save task
 saveBtn.addEventListener("click", function () {
   //Read values from form fields
   const name = document.getElementById("task-name").value;
