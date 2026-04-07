@@ -351,3 +351,31 @@ input, select {
 input:focus, select:focus {
     border-color: #432E1B;
 }
+.card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.priority-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.priority-high {
+    background-color: #FDECEA;
+    color: #C0392B;
+}
+
+.priority-medium {
+    background-color: #FEF9E7;
+    color: #D4AC0D;
+}
+
+.priority-low {
+    background-color: #EAFAF1;
+    color: #1E8449;
+}
