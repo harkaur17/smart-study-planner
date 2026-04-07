@@ -8,6 +8,7 @@ const modal = document.querySelector(".modal");
 const addCourseBtn = document.querySelector(".header-card button");
 const cancelBtn = document.getElementById("cancel-course");
 const saveBtn = document.getElementById("save-course");
+let editCourseCode = null;
 
 //open modal
 addCourseBtn.addEventListener("click", function () {
@@ -49,7 +50,17 @@ saveBtn.addEventListener("click", function () {
   };
 
   //Add to course array
+  if(editCourseCode === null){
   courses.push(newCourse);
+  } else {
+    courses = courses.map(function(course){
+      if(course.code === editCourseCode){
+        return newCourse; //replace with updated course
+      }
+      return course; //keep everything else
+    });
+    editCourseCode = null;
+  }
   modal.style.display = "none";
   renderCourses();
 
@@ -68,10 +79,9 @@ function renderCourses() {
                     <p>${course.name}</p>
                 </div>
                 <div class="button-group">
-                    <button class="btn-edit">Edit</button>
-                    <button class="btn-delete" onClick="deleteCourse('${course.code}')">
-                        Delete
-                    </button>
+                    <button class="btn-edit" onclick="event.stopPropagation(); openEditCourse('${course.code}')">Edit</button>
+                    <button class="btn-delete" onclick="event.stopPropagation(); deleteCourse('${course.code}')">Delete</button>
+                  </div>
                 </div>
             </div>
         `;
@@ -83,6 +93,18 @@ function deleteCourse(courseCode) {
     return course.code !== courseCode;
   });
   renderCourses();
+}
+
+function openEditCourse(courseCode) {
+  const course = courses.find(function (c) {
+    return c.code === courseCode;
+  });
+  //pre fill all form fields
+  document.getElementById("course-name").value = course.name;
+  document.getElementById("course-code").value = course.code;
+
+  editCourseCode = courseCode;
+  modal.style.display = "flex";
 }
 
 renderCourses();
