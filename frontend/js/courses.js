@@ -59,7 +59,7 @@ saveBtn.addEventListener("click", function () {
       }
       return course; //keep everything else
     });
-    editCourseCode = null;
+    editCourseCodec = null;
   }
   modal.style.display = "none";
   renderCourses();

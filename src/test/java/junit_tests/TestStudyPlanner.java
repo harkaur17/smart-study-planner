@@ -1,5 +1,6 @@
 package junit_tests;
 
+import studyPlanner.service.*;
 import studyPlanner.model.*;
 import org.junit.Test;
 import org.junit.Before;
