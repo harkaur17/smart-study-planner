@@ -1,4 +1,4 @@
-package studyPlanner.model;
+package studyPlanner.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,8 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import studyPlanner.model.Course;
+import studyPlanner.model.Task;
 import studyPlanner.model.Task.Priority;
 import studyPlanner.persistence.*;
 

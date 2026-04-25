@@ -1,5 +1,6 @@
 package studyPlanner.persistence;
 
+import studyPlanner.service.StudyPlanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import studyPlanner.model.*;

@@ -1,6 +1,6 @@
 package studyPlanner;
 
-import studyPlanner.model.*;
+import studyPlanner.service.StudyPlanner; 
 
 public class Main {
 
