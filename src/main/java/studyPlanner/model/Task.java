@@ -2,40 +2,60 @@ package studyPlanner.model;
 
 import java.util.ArrayList;
 import java.time.LocalDate;
+import jakarta.persistence.*;
+import java.util.List;
 
+@Entity
+@Table(name = "tasks")
 public class Task {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(nullable = false)
 	private String taskName;
+
+	@Column(nullable = false)
 	private String taskType;
+
+	@Column
 	private LocalDate dueDate;
 
-	private ArrayList<Course> courses;
+	@ManyToMany(mappedBy = "tasks")
+	private List<Course> courses = new ArrayList<>();
 
-	//enum for status of the task
+	// enum for status of the task
 	public enum Status {
 		TODO,
 		IN_PROGRESS,
 		DONE
 	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Status status;
 
-	public enum Priority{
+	public enum Priority {
 		HIGH,
 		MEDIUM,
 		LOW
 	}
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Priority priority;
 
-	//constructor #1 for tasks with all the attributes, except priority
+	// constructor #1 for tasks with all the attributes, except priority
 	public Task(String taskName, String taskType, LocalDate dueDate, Status status) {
 
-		if(taskName == null || taskName.trim().isEmpty()) {
+		if (taskName == null || taskName.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task name cannot be null.");
 		}
-		if(taskType == null || taskType.trim().isEmpty()) {
+		if (taskType == null || taskType.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task type cannot be null.");
 		}
-		if(status == null) {
+		if (status == null) {
 			throw new IllegalArgumentException("Task Status cannot be null.");
 		}
 		this.taskName = taskName;
@@ -43,19 +63,19 @@ public class Task {
 		this.taskType = taskType;
 		this.status = status;
 		this.courses = new ArrayList<Course>();
-		this.priority = Priority.MEDIUM; //default option set to MEDIUM
+		this.priority = Priority.MEDIUM; // default option set to MEDIUM
 	}
 
-	//constructor #2 for tasks with no due date
+	// constructor #2 for tasks with no due date
 	public Task(String taskName, String taskType, Status status) {
 
-		if(taskName == null  || taskName.trim().isEmpty()) {
+		if (taskName == null || taskName.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task name cannot be null.");
 		}
-		if(taskType == null || taskType.trim().isEmpty()) {
+		if (taskType == null || taskType.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task type cannot be null.");
 		}
-		if(status == null) {
+		if (status == null) {
 			throw new IllegalArgumentException("Task Status cannot be null.");
 		}
 		this.taskName = taskName;
@@ -63,19 +83,19 @@ public class Task {
 		this.status = status;
 		this.dueDate = null;
 		this.courses = new ArrayList<Course>();
-		this.priority = Priority.MEDIUM; //default option set to MEDIUM
+		this.priority = Priority.MEDIUM; // default option set to MEDIUM
 	}
 
-	//constructor #3 for tasks with all the attributes
+	// constructor #3 for tasks with all the attributes
 	public Task(String taskName, String taskType, LocalDate dueDate, Status status, Priority priority) {
 
-		if(taskName == null || taskName.trim().isEmpty()) {
+		if (taskName == null || taskName.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task name cannot be null.");
 		}
-		if(taskType == null || taskType.trim().isEmpty()) {
+		if (taskType == null || taskType.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task type cannot be null.");
 		}
-		if(status == null) {
+		if (status == null) {
 			throw new IllegalArgumentException("Task Status cannot be null.");
 		}
 		this.taskName = taskName;
@@ -86,16 +106,16 @@ public class Task {
 		this.priority = priority;
 	}
 
-	//constructor #4 for tasks with priority and no due date
+	// constructor #4 for tasks with priority and no due date
 	public Task(String taskName, String taskType, Status status, Priority priority) {
 
-		if(taskName == null || taskName.trim().isEmpty()) {
+		if (taskName == null || taskName.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task name cannot be null.");
 		}
-		if(taskType == null || taskType.trim().isEmpty()) {
+		if (taskType == null || taskType.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task type cannot be null.");
 		}
-		if(status == null) {
+		if (status == null) {
 			throw new IllegalArgumentException("Task Status cannot be null.");
 		}
 		this.taskName = taskName;
@@ -106,24 +126,28 @@ public class Task {
 		this.priority = priority;
 	}
 
+	protected Task(){}
+
 	public void addCourse(Course c) {
-		if(c==null) return;
-		if(!this.courses.contains(c)) {
+		if (c == null)
+			return;
+		if (!this.courses.contains(c)) {
 			this.courses.add(c);
 			c.addTask(this);
 		}
 	}
 
 	public void setDueDate(LocalDate dueDate) {
-		//Not needed?
-		//TODO: later update this so that if the dueDate is from past then throw exception
-		if(dueDate == null) {
+		// Not needed?
+		// TODO: later update this so that if the dueDate is from past then throw
+		// exception
+		if (dueDate == null) {
 			throw new IllegalArgumentException("Task Status cannot be null.");
 		}
 		this.dueDate = dueDate;
 	}
 
-	//GETTERS
+	// GETTERS
 
 	public String getTaskName() {
 		return this.taskName;
@@ -145,7 +169,7 @@ public class Task {
 		return this.courses.size();
 	}
 
-	public ArrayList<Course> getCourses(){
+	public ArrayList<Course> getCourses() {
 		return new ArrayList<Course>(this.courses);
 	}
 
@@ -153,10 +177,14 @@ public class Task {
 		return this.priority;
 	}
 
-	//SETTERS
+	public Long getId(){
+		return this.id;
+	}
+
+	// SETTERS
 
 	public void setName(String taskName) {
-		if(taskName == null || taskName.trim().isEmpty()) {
+		if (taskName == null || taskName.trim().isEmpty()) {
 			throw new IllegalArgumentException("Task name cannot be empty.");
 		}
 		this.taskName = taskName;
@@ -170,25 +198,25 @@ public class Task {
 	}
 
 	public void setStatus(Status status) {
-		if(status == null) {
+		if (status == null) {
 			throw new IllegalArgumentException("Status cannot be null.");
 		}
 		this.status = status;
 	}
 
 	public void setPriority(Priority priority) {
-		if(priority == null) {
+		if (priority == null) {
 			throw new IllegalArgumentException("Priority cannot be null.");
 		}
 		this.priority = priority;
 	}
 
 	public boolean removeCourse(Course course) {
-		if(course == null) {
+		if (course == null) {
 			return false;
 		}
 		boolean removed = courses.remove(course);
-		if(removed) {
+		if (removed) {
 			course.removeTask(this);
 		}
 		return removed;
@@ -196,14 +224,14 @@ public class Task {
 
 	public boolean removeCourseByCode(String courseCode) {
 
-		if(courseCode == null) {
+		if (courseCode == null) {
 			return false;
 		}
 		courseCode = courseCode.trim().toUpperCase();
-		for (Course c: this.courses) {
-			if(c.getCode().equals(courseCode)) {
+		for (Course c : this.courses) {
+			if (c.getCode().equals(courseCode)) {
 				boolean removed = this.courses.remove(c);
-				if(removed) {
+				if (removed) {
 					c.removeTask(this);
 				}
 				return removed;
@@ -236,5 +264,3 @@ public class Task {
 	}
 
 }
-
-

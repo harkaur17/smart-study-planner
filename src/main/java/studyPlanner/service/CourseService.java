@@ -1,67 +1,68 @@
 package studyPlanner.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import studyPlanner.model.Course;
 import studyPlanner.model.Task;
+import studyPlanner.repository.CourseRepository;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CourseService {
-    private ArrayList<Course> courses = new ArrayList<>();
+    @Autowired
+    private CourseRepository courseRepository;
 
-    //get all courses
-    public ArrayList<Course> getAllCourses(){
-        return new ArrayList<>(courses);
+    // get all courses
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
     }
 
-    //add a course
-    public boolean addCourse(String name, String code){
-        if (findByCode(code) != null) return false; // duplicate check
-        try{
+    // add a course
+    public boolean addCourse(String name, String code) {
+        Optional<Course> existing = courseRepository.findByCode(code);
+        if (existing.isPresent())
+            return false;
+        try {
             Course course = new Course(name, code);
-            courses.add(course);
+            courseRepository.save(course);
             return true;
-        }
-        catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
 
-    //delete course
-    public boolean deleteCourse(String code){
-        Course course = findByCode(code);
-        if(course == null) return false;
-        //remove course from all linked tasks
-        ArrayList<Task> linkedTasks = course.getTasks();
-        for(Task task : linkedTasks){
+    // delete course
+    public boolean deleteCourse(String code) {
+        Optional<Course> optional = courseRepository.findByCode(code);
+        if (!optional.isPresent())
+            return false;
+        Course course = optional.get();
+        for (Task task : course.getTasks()) {
             task.removeCourse(course);
         }
-        return courses.remove(course);
+        courseRepository.delete(course);
+        return true;
     }
 
-    //edit a course
-    public boolean editCourse(String code, String newName, String newCode){
-        Course course = findByCode(code);
-        if(course == null) return false;
-        try{
+    // edit a course
+    public boolean editCourse(String code, String newName, String newCode) {
+        Optional<Course> optional = courseRepository.findByCode(code);
+        if (!optional.isPresent())
+            return false;
+        try {
+            Course course = optional.get();
             if (newName != null && !newName.trim().isEmpty()) {
                 course.setName(newName);
             }
-            if(newCode != null && !newCode.trim().isEmpty()){
+            if (newCode != null && !newCode.trim().isEmpty()) {
                 course.setCode(newCode);
             }
+            courseRepository.save(course);
             return true;
-        }
-        catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return false;
         }
-    }
-
-    private Course findByCode(String code){
-        for(Course c: courses){
-            if(c.getCode().equalsIgnoreCase(code.trim())){
-                return c;
-            }
-        }
-        return null;
     }
 }

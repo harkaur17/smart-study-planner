@@ -1,19 +1,24 @@
 package studyPlanner.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import studyPlanner.model.Task;
 import studyPlanner.model.Course;
+import studyPlanner.repository.TaskRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
-    private ArrayList<Task> tasks = new ArrayList<>();
+    @Autowired
+    private TaskRepository taskRepository;
 
     // get all tasks
-    public ArrayList<Task> getAllTasks() {
-        return new ArrayList<>(tasks);
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 
     // add a task
@@ -33,46 +38,39 @@ public class TaskService {
             } else {
                 task = new Task(name, type, taskStatus, taskPriority);
             }
-            tasks.add(task);
+            taskRepository.save(task);
             return true;
         } catch (Exception e) {
+             e.printStackTrace();
             return false;
         }
     }
 
     // delete a task
     public boolean deleteTask(String name) {
-        if (name == null) {
+        Optional<Task> optional = taskRepository.findByTaskNameIgnoreCase(name);
+        if (!optional.isPresent()) {
             return false;
         }
-        Task task = findTaskByName(name);
-        if (task == null)
-            return false;
+        Task task = optional.get();
         ArrayList<Course> linkedCourses = new ArrayList<>(task.getCourses());
         for (Course course : linkedCourses) {
             task.removeCourse(course);
         }
-        return tasks.remove(task);
-    }
-
-    private Task findTaskByName(String taskName) {
-        if (taskName == null)
-            return null;
-        else {
-            return tasks.stream()
-                    .filter(t -> t.getTaskName().equalsIgnoreCase(taskName.trim()))
-                    .findFirst()
-                    .orElse(null);
-        }
+        taskRepository.delete(task);
+        return true;
     }
 
     // edit Task
     public boolean editTask(String name, String newName, String newType, String newDueDate,
             String newStatus, String newPriority) {
-        Task task = findTaskByName(name);
-        if (task == null)
+
+        Optional<Task> optional = taskRepository.findByTaskNameIgnoreCase(name);
+        if (!optional.isPresent())
             return false;
+
         try {
+            Task task = optional.get();
             if (newName != null && !newName.trim().isEmpty()) {
                 task.setName(newName);
             }
@@ -91,10 +89,10 @@ public class TaskService {
                 Task.Priority taskPriority = Task.Priority.valueOf(newPriority.toUpperCase());
                 task.setPriority(taskPriority);
             }
+            taskRepository.save(task); // ← this is critical, persists changes to DB
             return true;
         } catch (IllegalArgumentException e) {
             return false;
         }
-
     }
 }
