@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import studyPlanner.service.CourseService;
 import studyPlanner.model.Course;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController // tells spring that this handles HTTP requests
 @RequestMapping("/api/courses") // sets the base URL
@@ -24,8 +24,8 @@ public class CourseController {
 
     // GET /api/courses - fetch all courses
     @GetMapping
-    public ResponseEntity<ArrayList<Course>> getAllCourses() {
-        ArrayList<Course> courses = courseService.getAllCourses();
+    public ResponseEntity<List<Course>> getAllCourses() {
+        List<Course> courses = courseService.getAllCourses();
         return ResponseEntity.ok(courses); // sends 200 with list as JSON
     }
 

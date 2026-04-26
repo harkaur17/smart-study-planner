@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import studyPlanner.service.CourseService;
 import studyPlanner.service.TaskService;
 import studyPlanner.model.Task;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController // tells spring that this handles HTTP requests
 @RequestMapping("/api/tasks") // sets the base URL
@@ -32,8 +32,8 @@ public class TaskController {
 
     // GET /api/tasks - getAllTasks()
     @GetMapping
-    public ResponseEntity<ArrayList<Task>> getAllTasks() {
-        ArrayList<Task> tasks = taskService.getAllTasks();
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks); // sends 200 with list as JSON
 
     }

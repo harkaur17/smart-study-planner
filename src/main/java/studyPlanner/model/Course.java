@@ -1,12 +1,29 @@
 package studyPlanner.model;
 
 import java.util.ArrayList;
+import jakarta.persistence.*;
+import java.util.List;
 
+@Entity
+@Table(name = "courses")
 public class Course {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
+	@Column(nullable = false)
 	private String name;
+
+	@Column(nullable = false, unique = true)
 	private String code;
-	private ArrayList<Task>tasks;
+
+	@ManyToMany
+	@JoinTable(
+		name = "course_tasks",
+		joinColumns = @JoinColumn(name = "course_id"),
+		inverseJoinColumns = @JoinColumn(name = "task_id")
+	)
+	private List<Task> tasks = new ArrayList<>();
 
 	public Course(String name, String code) {
 		//Validation
@@ -21,12 +38,18 @@ public class Course {
 		this.tasks = new ArrayList<Task>();
 	}
 
+	protected Course() {}
+
 	public String getName() {
 		return this.name;
 	}
 
 	public String getCode() {
 		return this.code;
+	}
+
+	public Long getId(){
+		return this.id;
 	}
 	
 	public void setName(String name) {
