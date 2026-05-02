@@ -45,13 +45,18 @@
             </div>
 
             <div class="form-group">
-              <label for="course-code">Course Code</label>
-              <!--TODO: select from the courses in the database-->
-              <input
-                type="text"
-                id="course-code"
-                placeholder="Enter course code"
-              />
+              <label>Courses</label>
+              <div class="chip-selector">
+                <div id="selected-chips"></div>
+                <div class="chip-dropdown-btn" id="course-dropdown-btn">
+                  + Add course ▼
+                </div>
+                <div
+                  class="chip-dropdown"
+                  id="course-dropdown"
+                  style="display: none"
+                ></div>
+              </div>
             </div>
 
             <div class="form-group">
@@ -87,10 +92,10 @@
         </div>
       </div>
 
-      <div class = "modal" id = "detail-modal">
+      <div class="modal" id="detail-modal">
         <div class="modal-content">
           <h2>Task Details</h2>
-          <div class = "detail-group">
+          <div class="detail-group">
             <p><strong>Name: </strong><span id="detail-name"></span></p>
             <p><strong>Type: </strong><span id="detail-type"></span></p>
             <p><strong>Course: </strong><span id="detail-course"></span></p>
@@ -103,8 +108,8 @@
           </div>
         </div>
       </div>
-
     </main>
+    <script src="js/api.js"></script>
     <script src="js/tasks.js"></script>
   </body>
 </html>

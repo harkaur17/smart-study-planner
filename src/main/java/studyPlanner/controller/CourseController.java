@@ -31,32 +31,32 @@ public class CourseController {
 
     // POST /api/courses - add a course
     @PostMapping
-    public ResponseEntity<String> addCourse(@RequestBody CourseRequest request) {
-        boolean result = courseService.addCourse(request.name, request.code);
-        if (result) {
-            return ResponseEntity.status(201).body("Course added");
+    public ResponseEntity<Course> addCourse(@RequestBody CourseRequest request) {
+        Course course = courseService.addCourse(request.name, request.code);
+        if (course != null) {
+            return ResponseEntity.status(201).body(course);
         } else {
-            return ResponseEntity.badRequest().body("Failed to add course");
+            return ResponseEntity.badRequest().build();
         }
     }
 
-    // DELETE /api/courses/{code} - delete course
-    @DeleteMapping("/{code}")
-    public ResponseEntity<String> deleteCourse(@PathVariable String code) {
-        boolean result = courseService.deleteCourse(code);
+    // DELETE /api/courses/{id} - delete course
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Course> deleteCourse(@PathVariable Long id) {
+        boolean result = courseService.deleteCourse(id);
         if (result) {
-            return ResponseEntity.ok("Course deleted");
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // PUT /api/courses/{code} - edit a course
-    @PutMapping("/{code}")
-    public ResponseEntity<String> editCourse(@PathVariable String code, @RequestBody CourseRequest request){
-        boolean result = courseService.editCourse(code, request.newName, request.newCode);
-        if (result) {
-            return ResponseEntity.ok("Course updated");
+    // PUT /api/courses/{id} - edit a course
+    @PutMapping("/{id}")
+    public ResponseEntity<Course> editCourse(@PathVariable Long id, @RequestBody CourseRequest request) {
+        Course course = courseService.editCourse(id, request.newName, request.newCode);
+        if (course != null) {
+            return ResponseEntity.ok(course);
         } else {
             return ResponseEntity.notFound().build();
         }

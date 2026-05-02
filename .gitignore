@@ -7,8 +7,8 @@ bin/
 # Maven
 target/
 
-# Your data file (optional - comment out if you want to share)
-# studyplanner_data.json
+# data file
+ studyplanner_data.json
 
 # Compiled class file
 *.class

@@ -22,12 +22,14 @@ public class TaskController {
         public String dueDate;
         public String status;
         public String priority;
+        public List<String> courseCodes;
 
         public String newName;
         public String newType;
         public String newDueDate;
         public String newStatus;
         public String newPriority;
+        public List<String> newCourseCodes;
     }
 
     // GET /api/tasks - getAllTasks()
@@ -40,34 +42,34 @@ public class TaskController {
 
     // POST /api/tasks - addTask()
     @PostMapping
-    public ResponseEntity<String> addTask(@RequestBody TaskRequest request) {
-        boolean result = taskService.addTask(request.name, request.type, request.dueDate, request.status,
-                request.priority);
-        if (result) {
-            return ResponseEntity.status(201).body("Task added");
+    public ResponseEntity<Task> addTask(@RequestBody TaskRequest request) {
+        Task task = taskService.addTask(request.name, request.type, request.dueDate,
+                request.status, request.priority, request.courseCodes);
+        if (task != null) {
+            return ResponseEntity.status(201).body(task);
         } else {
-            return ResponseEntity.badRequest().body("Failed to add task");
+            return ResponseEntity.badRequest().build();
         }
     }
 
-    // PUT /api/tasks/{name} - editTask()
-    @PutMapping("/{name}")
-    public ResponseEntity<String> editTask(@PathVariable String name, @RequestBody TaskRequest request) {
-        boolean result = taskService.editTask(name, request.newName, request.newType, request.newDueDate,
-                request.newStatus, request.newPriority);
-        if (result) {
-            return ResponseEntity.ok("Task updated");
+    // PUT /api/tasks/{id} - editTask()
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> editTask(@PathVariable Long id, @RequestBody TaskRequest request) {
+        Task task = taskService.editTask(id, request.newName, request.newType, request.newDueDate,
+                request.newStatus, request.newPriority, request.newCourseCodes);
+        if (task != null) {
+            return ResponseEntity.ok(task);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // DELETE /api/tasks/{name} - deleteTask()
-    @DeleteMapping("/{name}")
-    public ResponseEntity<String> deleteTask(@PathVariable String name) {
-        boolean result = taskService.deleteTask(name);
+    // DELETE /api/tasks/{id} - deleteTask()
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        boolean result = taskService.deleteTask(id);
         if (result) {
-            return ResponseEntity.ok("Task deleted");
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }

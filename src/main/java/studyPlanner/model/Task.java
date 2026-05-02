@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -22,6 +24,7 @@ public class Task {
 	@Column
 	private LocalDate dueDate;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "tasks")
 	private List<Course> courses = new ArrayList<>();
 

@@ -1,0 +1,106 @@
+<svg width="100%" viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Random scattered study doodles</title>
+<desc>Randomly placed and rotated study themed doodles scattered across the full page</desc>
+<style>
+  .d { stroke: #A89880; stroke-width: 2; fill: none; opacity: 0.7; }
+  .dot { fill: #A89880; opacity: 0.65; }
+</style>
+
+<!-- ROW 1 -->
+<g class="d" transform="translate(24,38) rotate(12)"><rect x="0" y="0" width="34" height="42" rx="2"/><line x1="6" y1="0" x2="6" y2="42"/><line x1="10" y1="8" x2="30" y2="8"/><line x1="10" y1="14" x2="30" y2="14"/><line x1="10" y1="20" x2="26" y2="20"/></g>
+<g class="d" transform="translate(110,55) rotate(-55)"><rect x="0" y="0" width="9" height="48" rx="1"/><polygon points="0,48 9,48 4.5,58"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="44" x2="9" y2="44"/></g>
+<g class="d" transform="translate(196,22) rotate(20)"><polygon points="14,0 17,10 28,10 19,16 22,26 14,20 6,26 9,16 0,10 11,10"/></g>
+<g class="d" transform="translate(300,44) rotate(-8)"><circle cx="20" cy="20" r="20"/><line x1="20" y1="20" x2="20" y2="6"/><line x1="20" y1="20" x2="30" y2="25"/><circle cx="20" cy="20" r="2" class="dot"/><line x1="20" y1="1" x2="20" y2="5"/><line x1="20" y1="35" x2="20" y2="39"/><line x1="1" y1="20" x2="5" y2="20"/><line x1="35" y1="20" x2="39" y2="20"/></g>
+<g class="d" transform="translate(430,18) rotate(15)"><path d="M16,0 C26,0 32,8 32,18 C32,26 28,30 26,34 L6,34 C4,30 0,26 0,18 C0,8 6,0 16,0Z"/><line x1="6" y1="37" x2="26" y2="37"/><line x1="8" y1="41" x2="24" y2="41"/><line x1="11" y1="45" x2="21" y2="45"/><line x1="16" y1="-5" x2="16" y2="-11"/><line x1="26" y1="-2" x2="30" y2="-7"/><line x1="6" y1="-2" x2="2" y2="-7"/></g>
+<g class="d" transform="translate(560,30) rotate(-18)"><path d="M8,0 L28,0 L26,18 C26,26 18,32 18,32 C18,32 10,26 10,18 Z"/><line x1="3" y1="3" x2="8" y2="3"/><line x1="3" y1="3" x2="5" y2="12"/><line x1="28" y1="3" x2="33" y2="3"/><line x1="33" y1="3" x2="31" y2="12"/><line x1="12" y1="32" x2="24" y2="32"/><rect x="9" y="32" width="18" height="5" rx="1"/></g>
+<g class="d" transform="translate(680,14) rotate(10)"><polygon points="24,0 48,12 24,24 0,12"/><line x1="24" y1="24" x2="24" y2="38"/><ellipse cx="24" cy="38" rx="12" ry="5"/><line x1="48" y1="12" x2="48" y2="24"/><circle cx="48" cy="26" r="2"/></g>
+<g class="d" transform="translate(820,18) rotate(30)"><circle cx="18" cy="18" r="4"/><ellipse cx="18" cy="18" rx="18" ry="7"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(60,18,18)"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(120,18,18)"/></g>
+<g class="d" transform="translate(960,24) rotate(-6)"><rect x="0" y="0" width="44" height="30" rx="2"/><line x1="0" y1="5" x2="44" y2="5"/><line x1="22" y1="0" x2="22" y2="30"/><line x1="4" y1="12" x2="18" y2="12"/><line x1="26" y1="12" x2="40" y2="12"/></g>
+<g class="d" transform="translate(1100,40) rotate(70)"><rect x="0" y="0" width="9" height="52" rx="1"/><polygon points="0,52 9,52 4.5,62"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="48" x2="9" y2="48"/></g>
+<g class="d" transform="translate(1240,22) rotate(-25)"><polygon points="10,0 12,7 19,7 14,11 16,18 10,14 4,18 6,11 1,7 8,7"/></g>
+<g class="d" transform="translate(1340,30) rotate(-15)"><circle cx="14" cy="14" r="13"/><line x1="23" y1="23" x2="34" y2="34"/><line x1="8" y1="14" x2="20" y2="14"/><line x1="14" y1="8" x2="14" y2="20"/></g>
+
+<!-- ROW 2 -->
+<g class="d" transform="translate(44,160) rotate(35)"><rect x="0" y="0" width="90" height="15" rx="2"/><line x1="8" y1="0" x2="8" y2="8"/><line x1="18" y1="0" x2="18" y2="5"/><line x1="28" y1="0" x2="28" y2="8"/><line x1="38" y1="0" x2="38" y2="5"/><line x1="48" y1="0" x2="48" y2="8"/><line x1="58" y1="0" x2="58" y2="5"/><line x1="68" y1="0" x2="68" y2="8"/></g>
+<g class="d" transform="translate(220,140) rotate(-20)"><path d="M8,0 L8,18 L0,36 L24,36 L16,18 L16,0 Z"/><line x1="6" y1="0" x2="18" y2="0"/><line x1="2" y1="28" x2="22" y2="28"/><circle cx="8" cy="31" r="2" class="dot"/></g>
+<g class="d" transform="translate(380,130) rotate(10)"><path d="M6,0 C20,10 20,20 6,30 C-8,40 -8,50 6,60"/><path d="M18,0 C4,10 4,20 18,30 C32,40 32,50 18,60"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5" y1="24" x2="19" y2="24"/><line x1="7" y1="36" x2="17" y2="36"/></g>
+<g class="d" transform="translate(540,148) rotate(12)"><line x1="0" y1="4" x2="36" y2="4"/><line x1="8" y1="4" x2="8" y2="26"/><line x1="28" y1="4" x2="28" y2="26"/><line x1="6" y1="26" x2="10" y2="26"/><line x1="26" y1="26" x2="30" y2="26"/></g>
+<g class="d" transform="translate(700,136) rotate(15)"><line x1="14" y1="0" x2="14" y2="26"/><line x1="14" y1="0" x2="28" y2="-4"/><line x1="28" y1="-4" x2="28" y2="22"/><ellipse cx="10" cy="28" rx="6" ry="4" transform="rotate(-15,10,28)"/><ellipse cx="24" cy="24" rx="6" ry="4" transform="rotate(-15,24,24)"/></g>
+<g class="d" transform="translate(860,130) rotate(-14)"><polygon points="0,0 30,0 15,22 30,44 0,44 15,22"/><line x1="0" y1="0" x2="30" y2="0"/><line x1="0" y1="44" x2="30" y2="44"/></g>
+<g class="d" transform="translate(1020,120) rotate(20)"><path d="M14,0 C14,0 26,10 26,26 L18,32 L10,32 L2,26 C2,10 14,0 14,0Z"/><ellipse cx="14" cy="18" rx="6" ry="6"/></g>
+<g class="d" transform="translate(1180,148) rotate(-18)"><polyline points="0,14 10,24 28,0"/></g>
+<g class="d" transform="translate(1300,130) rotate(35)"><polygon points="16,0 19,11 32,11 22,18 26,29 16,22 6,29 10,18 0,11 13,11"/></g>
+
+<!-- ROW 3 -->
+<g class="d" transform="translate(36,280) rotate(6)"><path d="M0,0 C10,-4 20,-4 24,0 C28,-4 38,-4 48,0 L48,32 C38,28 28,28 24,32 C20,28 10,28 0,32 Z"/><line x1="24" y1="0" x2="24" y2="32"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="18" x2="20" y2="18"/><line x1="28" y1="10" x2="44" y2="10"/><line x1="28" y1="18" x2="44" y2="18"/></g>
+<g class="d" transform="translate(200,260) rotate(-80)"><rect x="0" y="0" width="9" height="48" rx="1"/><polygon points="0,48 9,48 4.5,58"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="44" x2="9" y2="44"/></g>
+<g class="d" transform="translate(360,264) rotate(-10)"><circle cx="20" cy="20" r="20"/><ellipse cx="20" cy="20" rx="9" ry="20"/><line x1="0" y1="20" x2="40" y2="20"/><path d="M4,10 C11,13 29,13 36,10" fill="none"/><path d="M4,30 C11,27 29,27 36,30" fill="none"/></g>
+<g class="d" transform="translate(520,254) rotate(8)"><polygon points="20,0 9,22 18,22 7,44 30,16 19,16 28,0"/></g>
+<g class="d" transform="translate(680,254) rotate(12)"><rect x="0" y="0" width="36" height="50" rx="3"/><rect x="4" y="4" width="28" height="12" rx="1"/><rect x="4" y="20" width="7" height="5" rx="1"/><rect x="14" y="20" width="7" height="5" rx="1"/><rect x="24" y="20" width="7" height="5" rx="1"/><rect x="4" y="28" width="7" height="5" rx="1"/><rect x="14" y="28" width="7" height="5" rx="1"/><rect x="24" y="28" width="7" height="5" rx="1"/></g>
+<g class="d" transform="translate(840,258) rotate(-22)"><circle cx="18" cy="18" r="18"/><line x1="18" y1="4" x2="18" y2="32"/><line x1="4" y1="18" x2="32" y2="18"/><polygon points="18,6 16,13 20,13"/><polygon points="18,30 16,23 20,23"/></g>
+<g class="d" transform="translate(1000,248) rotate(45)"><rect x="0" y="0" width="9" height="52" rx="1"/><polygon points="0,52 9,52 4.5,62"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="48" x2="9" y2="48"/></g>
+<g class="d" transform="translate(1160,270) rotate(-10)"><path d="M16,10 C16,4 8,0 4,6 C0,12 8,16 16,10 C24,4 32,8 28,14 C24,20 16,16 16,10Z"/></g>
+<g class="d" transform="translate(1300,258) rotate(22)"><polygon points="10,0 12,7 19,7 14,11 16,18 10,14 4,18 6,11 1,7 8,7"/></g>
+
+<!-- ROW 4 -->
+<g class="d" transform="translate(24,396) rotate(60)"><rect x="0" y="0" width="9" height="46" rx="1"/><polygon points="0,46 9,46 4.5,56"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="42" x2="9" y2="42"/></g>
+<g class="d" transform="translate(180,378) rotate(8)"><rect x="0" y="0" width="40" height="50" rx="2"/><line x1="7" y1="12" x2="33" y2="12"/><line x1="7" y1="20" x2="33" y2="20"/><line x1="7" y1="28" x2="33" y2="28"/><polyline points="5,44 9,48 17,40"/></g>
+<g class="d" transform="translate(340,382) rotate(-30)"><polygon points="18,0 22,13 36,13 25,21 29,34 18,26 7,34 11,21 0,13 14,13"/></g>
+<g class="d" transform="translate(500,374) rotate(-6)"><rect x="0" y="0" width="42" height="10" rx="2"/><rect x="3" y="12" width="40" height="10" rx="2"/><rect x="1" y="24" width="44" height="10" rx="2"/></g>
+<g class="d" transform="translate(660,376) rotate(16)"><rect x="6" y="0" width="38" height="48" rx="4"/><ellipse cx="6" cy="24" rx="6" ry="11"/><line x1="12" y1="13" x2="40" y2="13"/><line x1="12" y1="21" x2="40" y2="21"/></g>
+<g class="d" transform="translate(820,382) rotate(-50)"><rect x="0" y="0" width="9" height="50" rx="1"/><polygon points="0,50 9,50 4.5,60"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="46" x2="9" y2="46"/></g>
+<g class="d" transform="translate(980,384) rotate(5)"><line x1="0" y1="36" x2="36" y2="0"/><circle cx="6" cy="6" r="6"/><circle cx="30" cy="30" r="6"/></g>
+<g class="d" transform="translate(1120,384) rotate(-8)"><polyline points="0,20 8,20 14,36 26,0 44,0"/></g>
+<g class="d" transform="translate(1260,390) rotate(18)"><polygon points="10,0 12,7 19,7 14,11 16,18 10,14 4,18 6,11 1,7 8,7"/></g>
+<g class="d" transform="translate(1360,370) rotate(-12)"><rect x="0" y="0" width="34" height="44" rx="2"/><line x1="6" y1="0" x2="6" y2="44"/><line x1="10" y1="8" x2="30" y2="8"/></g>
+
+<!-- ROW 5 -->
+<g class="d" transform="translate(60,500) rotate(-15)"><rect x="0" y="0" width="100" height="16" rx="2"/><line x1="8" y1="0" x2="8" y2="8"/><line x1="18" y1="0" x2="18" y2="5"/><line x1="28" y1="0" x2="28" y2="8"/><line x1="38" y1="0" x2="38" y2="5"/><line x1="48" y1="0" x2="48" y2="8"/><line x1="58" y1="0" x2="58" y2="5"/><line x1="68" y1="0" x2="68" y2="8"/></g>
+<g class="d" transform="translate(260,490) rotate(45)"><circle cx="18" cy="18" r="4"/><ellipse cx="18" cy="18" rx="18" ry="7"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(60,18,18)"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(120,18,18)"/></g>
+<g class="d" transform="translate(440,510) rotate(10)"><polyline points="0,12 8,20 24,0"/></g>
+<g class="d" transform="translate(580,488) rotate(25)"><rect x="0" y="0" width="9" height="48" rx="1"/><polygon points="0,48 9,48 4.5,58"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="44" x2="9" y2="44"/></g>
+<g class="d" transform="translate(740,496) rotate(-20)"><polygon points="14,0 17,10 28,10 19,16 22,26 14,20 6,26 9,16 0,10 11,10"/></g>
+<g class="d" transform="translate(900,484) rotate(18)"><path d="M8,0 L8,18 L0,36 L24,36 L16,18 L16,0 Z"/><line x1="6" y1="0" x2="18" y2="0"/><line x1="2" y1="28" x2="22" y2="28"/><circle cx="8" cy="31" r="2" class="dot"/></g>
+<g class="d" transform="translate(1060,492) rotate(-12)"><line x1="14" y1="0" x2="14" y2="26"/><line x1="14" y1="0" x2="28" y2="-4"/><line x1="28" y1="-4" x2="28" y2="22"/><ellipse cx="10" cy="28" rx="6" ry="4" transform="rotate(-15,10,28)"/><ellipse cx="24" cy="24" rx="6" ry="4" transform="rotate(-15,24,24)"/></g>
+<g class="d" transform="translate(1220,488) rotate(8)"><polygon points="24,0 48,12 24,24 0,12"/><line x1="24" y1="24" x2="24" y2="38"/><ellipse cx="24" cy="38" rx="12" ry="5"/></g>
+<g class="d" transform="translate(1360,500) rotate(-18)"><rect x="0" y="0" width="34" height="42" rx="2"/><line x1="6" y1="0" x2="6" y2="42"/><line x1="10" y1="8" x2="30" y2="8"/></g>
+
+<!-- ROW 6 -->
+<g class="d" transform="translate(30,610) rotate(22)"><polygon points="14,0 17,10 28,10 19,16 22,26 14,20 6,26 9,16 0,10 11,10"/></g>
+<g class="d" transform="translate(160,600) rotate(-35)"><rect x="0" y="0" width="9" height="48" rx="1"/><polygon points="0,48 9,48 4.5,58"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="44" x2="9" y2="44"/></g>
+<g class="d" transform="translate(300,594) rotate(8)"><rect x="0" y="0" width="34" height="42" rx="2"/><line x1="6" y1="0" x2="6" y2="42"/><line x1="10" y1="8" x2="30" y2="8"/><line x1="10" y1="14" x2="30" y2="14"/></g>
+<g class="d" transform="translate(460,606) rotate(-18)"><circle cx="20" cy="20" r="20"/><line x1="20" y1="20" x2="20" y2="6"/><line x1="20" y1="20" x2="30" y2="25"/><circle cx="20" cy="20" r="2" class="dot"/></g>
+<g class="d" transform="translate(620,598) rotate(14)"><path d="M16,0 C26,0 32,8 32,18 C32,26 28,30 26,34 L6,34 C4,30 0,26 0,18 C0,8 6,0 16,0Z"/><line x1="6" y1="37" x2="26" y2="37"/><line x1="8" y1="41" x2="24" y2="41"/></g>
+<g class="d" transform="translate(780,610) rotate(-8)"><polygon points="20,0 9,22 18,22 7,44 30,16 19,16 28,0"/></g>
+<g class="d" transform="translate(940,598) rotate(30)"><circle cx="18" cy="18" r="4"/><ellipse cx="18" cy="18" rx="18" ry="7"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(60,18,18)"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(120,18,18)"/></g>
+<g class="d" transform="translate(1100,604) rotate(-25)"><path d="M8,0 L28,0 L26,18 C26,26 18,32 18,32 C18,32 10,26 10,18 Z"/><line x1="12" y1="32" x2="24" y2="32"/><rect x="9" y="32" width="18" height="5" rx="1"/></g>
+<g class="d" transform="translate(1260,596) rotate(16)"><rect x="0" y="0" width="90" height="15" rx="2"/><line x1="8" y1="0" x2="8" y2="8"/><line x1="28" y1="0" x2="28" y2="8"/><line x1="48" y1="0" x2="48" y2="8"/><line x1="68" y1="0" x2="68" y2="8"/></g>
+<g class="d" transform="translate(1380,606) rotate(-10)"><polyline points="0,12 8,20 24,0"/></g>
+
+<!-- ROW 7 -->
+<g class="d" transform="translate(50,720) rotate(-12)"><path d="M0,0 C10,-4 20,-4 24,0 C28,-4 38,-4 48,0 L48,32 C38,28 28,28 24,32 C20,28 10,28 0,32 Z"/><line x1="24" y1="0" x2="24" y2="32"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="28" y1="10" x2="44" y2="10"/></g>
+<g class="d" transform="translate(210,708) rotate(40)"><rect x="0" y="0" width="9" height="52" rx="1"/><polygon points="0,52 9,52 4.5,62"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="48" x2="9" y2="48"/></g>
+<g class="d" transform="translate(360,716) rotate(-6)"><polygon points="24,0 48,12 24,24 0,12"/><line x1="24" y1="24" x2="24" y2="38"/><ellipse cx="24" cy="38" rx="12" ry="5"/></g>
+<g class="d" transform="translate(520,710) rotate(20)"><polygon points="16,0 19,11 32,11 22,18 26,29 16,22 6,29 10,18 0,11 13,11"/></g>
+<g class="d" transform="translate(680,720) rotate(-30)"><rect x="0" y="0" width="36" height="50" rx="3"/><rect x="4" y="4" width="28" height="12" rx="1"/><rect x="4" y="20" width="7" height="5" rx="1"/><rect x="14" y="20" width="7" height="5" rx="1"/><rect x="24" y="20" width="7" height="5" rx="1"/></g>
+<g class="d" transform="translate(840,706) rotate(12)"><path d="M6,0 C20,10 20,20 6,30 C-8,40 -8,50 6,60"/><path d="M18,0 C4,10 4,20 18,30 C32,40 32,50 18,60"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5" y1="24" x2="19" y2="24"/></g>
+<g class="d" transform="translate(1000,716) rotate(-16)"><path d="M8,0 L8,18 L0,36 L24,36 L16,18 L16,0 Z"/><line x1="6" y1="0" x2="18" y2="0"/><line x1="2" y1="28" x2="22" y2="28"/></g>
+<g class="d" transform="translate(1160,708) rotate(25)"><polyline points="0,14 10,24 28,0"/></g>
+<g class="d" transform="translate(1280,716) rotate(-8)"><path d="M16,10 C16,4 8,0 4,6 C0,12 8,16 16,10 C24,4 32,8 28,14 C24,20 16,16 16,10Z"/></g>
+<g class="d" transform="translate(1370,710) rotate(18)"><polygon points="10,0 12,7 19,7 14,11 16,18 10,14 4,18 6,11 1,7 8,7"/></g>
+
+<!-- ROW 8 BOTTOM -->
+<g class="d" transform="translate(30,820) rotate(8)"><rect x="0" y="0" width="34" height="42" rx="2"/><line x1="6" y1="0" x2="6" y2="42"/><line x1="10" y1="8" x2="30" y2="8"/><line x1="10" y1="14" x2="30" y2="14"/></g>
+<g class="d" transform="translate(180,816) rotate(-22)"><rect x="0" y="0" width="9" height="48" rx="1"/><polygon points="0,48 9,48 4.5,58"/><rect x="0" y="0" width="9" height="7"/><line x1="0" y1="44" x2="9" y2="44"/></g>
+<g class="d" transform="translate(320,818) rotate(15)"><polygon points="14,0 17,10 28,10 19,16 22,26 14,20 6,26 9,16 0,10 11,10"/></g>
+<g class="d" transform="translate(460,810) rotate(-10)"><circle cx="20" cy="20" r="20"/><line x1="20" y1="20" x2="20" y2="6"/><line x1="20" y1="20" x2="30" y2="25"/><circle cx="20" cy="20" r="2" class="dot"/></g>
+<g class="d" transform="translate(620,822) rotate(30)"><polygon points="20,0 9,22 18,22 7,44 30,16 19,16 28,0"/></g>
+<g class="d" transform="translate(780,814) rotate(-18)"><rect x="0" y="0" width="42" height="10" rx="2"/><rect x="3" y="12" width="40" height="10" rx="2"/><rect x="1" y="24" width="44" height="10" rx="2"/></g>
+<g class="d" transform="translate(940,820) rotate(12)"><circle cx="18" cy="18" r="4"/><ellipse cx="18" cy="18" rx="18" ry="7"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(60,18,18)"/><ellipse cx="18" cy="18" rx="18" ry="7" transform="rotate(120,18,18)"/></g>
+<g class="d" transform="translate(1100,812) rotate(-5)"><path d="M8,0 L28,0 L26,18 C26,26 18,32 18,32 C18,32 10,26 10,18 Z"/><line x1="12" y1="32" x2="24" y2="32"/><rect x="9" y="32" width="18" height="5" rx="1"/></g>
+<g class="d" transform="translate(1260,818) rotate(20)"><rect x="6" y="0" width="38" height="48" rx="4"/><ellipse cx="6" cy="24" rx="6" ry="11"/><line x1="12" y1="13" x2="40" y2="13"/><line x1="12" y1="21" x2="40" y2="21"/></g>
+<g class="d" transform="translate(1370,820) rotate(-14)"><polygon points="10,0 12,7 19,7 14,11 16,18 10,14 4,18 6,11 1,7 8,7"/></g>
+
+<!-- Dots scattered everywhere -->
+<circle class="dot" cx="170" cy="162" r="4"/><circle class="dot" cx="460" cy="80" r="3"/><circle class="dot" cx="600" cy="260" r="4"/><circle class="dot" cx="340" cy="440" r="3"/><circle class="dot" cx="1000" cy="160" r="4"/><circle class="dot" cx="80" cy="560" r="3"/><circle class="dot" cx="1300" cy="440" r="4"/><circle class="dot" cx="700" cy="460" r="3"/><circle class="dot" cx="900" cy="380" r="4"/><circle class="dot" cx="1140" cy="300" r="3"/><circle class="dot" cx="240" cy="560" r="4"/><circle class="dot" cx="1060" cy="580" r="3"/><circle class="dot" cx="560" cy="620" r="4"/><circle class="dot" cx="1200" cy="660" r="3"/><circle class="dot" cx="400" cy="760" r="4"/><circle class="dot" cx="960" cy="780" r="3"/><circle class="dot" cx="140" cy="680" r="4"/><circle class="dot" cx="760" cy="680" r="3"/><circle class="dot" cx="1340" cy="600" r="4"/><circle class="dot" cx="480" cy="860" r="3"/><circle class="dot" cx="860" cy="860" r="4"/><circle class="dot" cx="1180" cy="860" r="3"/>
+</svg>
