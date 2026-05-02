@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import studyPlanner.service.CourseService;
 import studyPlanner.service.TaskService;
+import studyPlanner.dto.TaskDTO;
 import studyPlanner.model.Task;
 import java.util.List;
 
@@ -34,16 +35,16 @@ public class TaskController {
 
     // GET /api/tasks - getAllTasks()
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        List<TaskDTO> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks); // sends 200 with list as JSON
 
     }
 
     // POST /api/tasks - addTask()
     @PostMapping
-    public ResponseEntity<Task> addTask(@RequestBody TaskRequest request) {
-        Task task = taskService.addTask(request.name, request.type, request.dueDate,
+    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskRequest request) {
+        TaskDTO task = taskService.addTask(request.name, request.type, request.dueDate,
                 request.status, request.priority, request.courseCodes);
         if (task != null) {
             return ResponseEntity.status(201).body(task);
@@ -54,8 +55,8 @@ public class TaskController {
 
     // PUT /api/tasks/{id} - editTask()
     @PutMapping("/{id}")
-    public ResponseEntity<Task> editTask(@PathVariable Long id, @RequestBody TaskRequest request) {
-        Task task = taskService.editTask(id, request.newName, request.newType, request.newDueDate,
+    public ResponseEntity<TaskDTO> editTask(@PathVariable Long id, @RequestBody TaskRequest request) {
+        TaskDTO task = taskService.editTask(id, request.newName, request.newType, request.newDueDate,
                 request.newStatus, request.newPriority, request.newCourseCodes);
         if (task != null) {
             return ResponseEntity.ok(task);

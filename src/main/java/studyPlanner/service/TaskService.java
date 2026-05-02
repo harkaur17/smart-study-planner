@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import studyPlanner.model.Task;
+import studyPlanner.dto.TaskDTO;
 import studyPlanner.model.Course;
 import studyPlanner.repository.CourseRepository;
 import studyPlanner.repository.TaskRepository;
@@ -21,12 +22,14 @@ public class TaskService {
     private CourseRepository courseRepository;
 
     // get all tasks
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<TaskDTO> getAllTasks() {
+         return taskRepository.findAll().stream()
+            .map(this::toDTO)
+            .collect(java.util.stream.Collectors.toList());
     }
 
     // add a task
-    public Task addTask(String name, String type, String dueDateStr, String status,
+    public TaskDTO addTask(String name, String type, String dueDateStr, String status,
             String priority, List<String> courseCodes) {
         try {
             Task.Status taskStatus = Task.Status.valueOf(status.toUpperCase());
@@ -54,7 +57,7 @@ public class TaskService {
                 }
             }
 
-            return taskRepository.save(task);
+            return toDTO(taskRepository.save(task));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -77,7 +80,7 @@ public class TaskService {
     }
 
     // edit Task
-    public Task editTask(Long id, String newName, String newType, String newDueDate,
+    public TaskDTO editTask(Long id, String newName, String newType, String newDueDate,
             String newStatus, String newPriority, List<String> newCourseCodes) {
 
         Optional<Task> optional = taskRepository.findById(id);
@@ -104,23 +107,38 @@ public class TaskService {
                 Task.Priority taskPriority = Task.Priority.valueOf(newPriority.toUpperCase());
                 task.setPriority(taskPriority);
             }
-            //update courses
-            if(newCourseCodes != null){
-      
+            // update courses
+            if (newCourseCodes != null) {
+
                 ArrayList<Course> existingCourses = new ArrayList<>(task.getCourses());
-                for(Course course: existingCourses){
+                for (Course course : existingCourses) {
                     task.removeCourse(course);
                 }
-                for(String code : newCourseCodes){
+                for (String code : newCourseCodes) {
                     Optional<Course> course = courseRepository.findByCode(code);
-                    if(course.isPresent()){
+                    if (course.isPresent()) {
                         task.addCourse(course.get());
                     }
                 }
             }
-            return taskRepository.save(task);
+            return toDTO(taskRepository.save(task));
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    // convert Task to TaskDTO
+    private TaskDTO toDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.id = task.getId();
+        dto.taskName = task.getTaskName();
+        dto.taskType = task.getTaskType();
+        dto.dueDate = task.getDueDate();
+        dto.taskStatus = task.getTaskStatus().name();
+        dto.priority = task.getPriority().name();
+        dto.courses = task.getCourses().stream()
+                .map(c -> new TaskDTO.CourseInfo(c.getId(), c.getCode(), c.getName()))
+                .collect(java.util.stream.Collectors.toList());
+        return dto;
     }
 }
