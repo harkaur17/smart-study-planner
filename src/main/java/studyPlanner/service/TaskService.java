@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import studyPlanner.model.Task;
 import studyPlanner.model.Course;
+import studyPlanner.repository.CourseRepository;
 import studyPlanner.repository.TaskRepository;
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +17,17 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private CourseRepository courseRepository;
+
     // get all tasks
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
     // add a task
-    public boolean addTask(String name, String type, String dueDateStr, String status, String priority) {
+    public Task addTask(String name, String type, String dueDateStr, String status,
+            String priority, List<String> courseCodes) {
         try {
             Task.Status taskStatus = Task.Status.valueOf(status.toUpperCase());
             Task.Priority taskPriority = Task.Priority.valueOf(priority.toUpperCase());
@@ -38,17 +43,27 @@ public class TaskService {
             } else {
                 task = new Task(name, type, taskStatus, taskPriority);
             }
-            taskRepository.save(task);
-            return true;
+
+            // link courses
+            if (courseCodes != null) {
+                for (String code : courseCodes) {
+                    Optional<Course> course = courseRepository.findByCode(code);
+                    if (course.isPresent()) {
+                        task.addCourse(course.get());
+                    }
+                }
+            }
+
+            return taskRepository.save(task);
         } catch (Exception e) {
-             e.printStackTrace();
-            return false;
+            e.printStackTrace();
+            return null;
         }
     }
 
     // delete a task
-    public boolean deleteTask(String name) {
-        Optional<Task> optional = taskRepository.findByTaskNameIgnoreCase(name);
+    public boolean deleteTask(Long id) {
+        Optional<Task> optional = taskRepository.findById(id);
         if (!optional.isPresent()) {
             return false;
         }
@@ -62,12 +77,12 @@ public class TaskService {
     }
 
     // edit Task
-    public boolean editTask(String name, String newName, String newType, String newDueDate,
-            String newStatus, String newPriority) {
+    public Task editTask(Long id, String newName, String newType, String newDueDate,
+            String newStatus, String newPriority, List<String> newCourseCodes) {
 
-        Optional<Task> optional = taskRepository.findByTaskNameIgnoreCase(name);
+        Optional<Task> optional = taskRepository.findById(id);
         if (!optional.isPresent())
-            return false;
+            return null;
 
         try {
             Task task = optional.get();
@@ -89,10 +104,23 @@ public class TaskService {
                 Task.Priority taskPriority = Task.Priority.valueOf(newPriority.toUpperCase());
                 task.setPriority(taskPriority);
             }
-            taskRepository.save(task); // ← this is critical, persists changes to DB
-            return true;
+            //update courses
+            if(newCourseCodes != null){
+      
+                ArrayList<Course> existingCourses = new ArrayList<>(task.getCourses());
+                for(Course course: existingCourses){
+                    task.removeCourse(course);
+                }
+                for(String code : newCourseCodes){
+                    Optional<Course> course = courseRepository.findByCode(code);
+                    if(course.isPresent()){
+                        task.addCourse(course.get());
+                    }
+                }
+            }
+            return taskRepository.save(task);
         } catch (IllegalArgumentException e) {
-            return false;
+            return null;
         }
     }
 }

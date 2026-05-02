@@ -1,14 +1,12 @@
-let courses = [
-  { name: "Advanced OOP", code: "EECS2030" },
-  { name: "Computer Organization", code: "EECS2021" },
-];
+requireAuth();
+let courses = [];
 
 //Get modal elements
 const modal = document.querySelector(".modal");
 const addCourseBtn = document.querySelector(".header-card button");
 const cancelBtn = document.getElementById("cancel-course");
 const saveBtn = document.getElementById("save-course");
-let editCourseCode = null;
+let editCourseId = null;
 
 //open modal
 addCourseBtn.addEventListener("click", function () {
@@ -49,22 +47,33 @@ saveBtn.addEventListener("click", function () {
     code: code,
   };
 
-  //Add to course array
-  if(editCourseCode === null){
-  courses.push(newCourse);
-  } else {
-    courses = courses.map(function(course){
-      if(course.code === editCourseCode){
-        return newCourse; //replace with updated course
-      }
-      return course; //keep everything else
+  //Add course
+  if (editCourseId === null) {
+    apiPost("/api/courses", newCourse).then(function (data) {
+      courses.push(data);
+      modal.style.display = "none";
+      renderCourses();
+      document.getElementById("add-course-form").reset();
     });
-    editCourseCodec = null;
+    return;
+  } else {
+    apiPut("/api/courses/" + editCourseId, {
+      newName: name,
+      newCode: code,
+    }).then(function (data) {
+      courses = courses.map(function (course) {
+    if (course.id === editCourseId) {
+        return { id: editCourseId, name: name, code: code };
+    }
+    return course;
+});
+      editCourseId = null;
+      modal.style.display = "none";
+      renderCourses();
+      document.getElementById("add-course-form").reset();
+    });
+    return;
   }
-  modal.style.display = "none";
-  renderCourses();
-
-  document.getElementById("add-course-form").reset();
 });
 
 function renderCourses() {
@@ -79,8 +88,8 @@ function renderCourses() {
                     <p>${course.name}</p>
                 </div>
                 <div class="button-group">
-                    <button class="btn-edit" onclick="event.stopPropagation(); openEditCourse('${course.code}')">Edit</button>
-                    <button class="btn-delete" onclick="event.stopPropagation(); deleteCourse('${course.code}')">Delete</button>
+                    <button class="btn-edit" onclick="event.stopPropagation(); openEditCourse(${course.id})">Edit</button>
+                    <button class="btn-delete" onclick="event.stopPropagation(); deleteCourse(${course.id})">Delete</button>
                   </div>
                 </div>
             </div>
@@ -88,23 +97,27 @@ function renderCourses() {
   });
 }
 
-function deleteCourse(courseCode) {
-  courses = courses.filter(function (course) {
-    return course.code !== courseCode;
-  });
+function deleteCourse(courseId) {
+    apiDelete("/api/courses/" + courseId).then(function () {
+        courses = courses.filter(function (course) {
+            return course.id !== courseId;
+        });
+        renderCourses();
+    });
+}
+
+function openEditCourse(courseId) {
+    const course = courses.find(function (c) {
+        return c.id === courseId;
+    });
+    //pre-fill all form fields
+    document.getElementById("course-name").value = course.name;
+    document.getElementById("course-code").value = course.code;
+    editCourseId = courseId;
+    modal.style.display = "flex";
+}
+
+apiGet("/api/courses").then(function (data) {
+  courses = data;
   renderCourses();
-}
-
-function openEditCourse(courseCode) {
-  const course = courses.find(function (c) {
-    return c.code === courseCode;
-  });
-  //pre fill all form fields
-  document.getElementById("course-name").value = course.name;
-  document.getElementById("course-code").value = course.code;
-
-  editCourseCode = courseCode;
-  modal.style.display = "flex";
-}
-
-renderCourses();
+});

@@ -1,4 +1,4 @@
-const nameField = document.getElementById("name");
+const nameGroup = document.getElementById('name-group');
 const authButton = document.getElementById("auth-btn");
 const toggleLink = document.getElementById("toggle-link");
 let isLogin = true; //true - login mode, false - register mode
@@ -6,11 +6,11 @@ let isLogin = true; //true - login mode, false - register mode
 function toggleMode() {
   isLogin = !isLogin;
   if (isLogin) {
-    nameField.style.display = "none"; //hide
+    nameGroup.style.display = "none"; //hide
     authButton.textContent = "Login";
     toggleLink.textContent = "Don't have an account? Register";
   } else {
-    nameField.style.display = "block"; //show
+    nameGroup.style.display = "flex"; //show
     authButton.textContent = "Register";
     toggleLink.textContent = "Already have an account? Login";
   }

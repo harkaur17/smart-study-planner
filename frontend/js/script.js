@@ -1,3 +1,4 @@
+requireAuth();
 const courses = [
     { name: "Advanced OOP", code: "EECS2030" },
     { name: "Computer Organization", code: "EECS2021" }

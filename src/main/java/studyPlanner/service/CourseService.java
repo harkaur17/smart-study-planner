@@ -20,22 +20,21 @@ public class CourseService {
     }
 
     // add a course
-    public boolean addCourse(String name, String code) {
+    public Course addCourse(String name, String code) {
         Optional<Course> existing = courseRepository.findByCode(code);
         if (existing.isPresent())
-            return false;
+            return null;
         try {
             Course course = new Course(name, code);
-            courseRepository.save(course);
-            return true;
+            return courseRepository.save(course);
         } catch (IllegalArgumentException e) {
-            return false;
+            return null;
         }
     }
 
     // delete course
-    public boolean deleteCourse(String code) {
-        Optional<Course> optional = courseRepository.findByCode(code);
+    public boolean deleteCourse(Long id) {
+        Optional<Course> optional = courseRepository.findById(id);
         if (!optional.isPresent())
             return false;
         Course course = optional.get();
@@ -47,22 +46,21 @@ public class CourseService {
     }
 
     // edit a course
-    public boolean editCourse(String code, String newName, String newCode) {
-        Optional<Course> optional = courseRepository.findByCode(code);
-        if (!optional.isPresent())
-            return false;
-        try {
-            Course course = optional.get();
-            if (newName != null && !newName.trim().isEmpty()) {
-                course.setName(newName);
-            }
-            if (newCode != null && !newCode.trim().isEmpty()) {
-                course.setCode(newCode);
-            }
-            courseRepository.save(course);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
+    public Course editCourse(Long id, String newName, String newCode) {
+    Optional<Course> optional = courseRepository.findById(id);
+    if (!optional.isPresent())
+        return null;
+    try {
+        Course course = optional.get();
+        if (newName != null && !newName.trim().isEmpty()) {
+            course.setName(newName);
         }
+        if (newCode != null && !newCode.trim().isEmpty()) {
+            course.setCode(newCode);
+        }
+        return courseRepository.save(course);
+    } catch (IllegalArgumentException e) {
+        return null;
     }
+}
 }

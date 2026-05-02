@@ -31,7 +31,9 @@ function apiGet(endpoint) {
     },
   }).then(function (response) {
     if (response.status === 401 || response.status === 403) {
-      logout(); // token expired, send to login
+      if (!window.location.href.includes("login.html")) {
+        logout();
+      }
     }
     return response.json();
   });

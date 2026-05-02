@@ -301,18 +301,22 @@ button:hover {
     border: 1px solid #EAE0D5;
     box-shadow: 0 4px 12px rgba(67, 46, 27, 0.05);
 }
-.modal{
-    display:none;  /* hidden until Add Task is clicked */
-    position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    background-color: rgba(0, 0, 0, 0.5); /* dark overlay */
-    z-index:1000;
+
+.modal {
+    display: none;
+    /* hidden until Add Task is clicked */
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* dark overlay */
+    z-index: 1000;
     justify-content: center;
     align-items: center;
 }
+
 .modal-content {
     background-color: #ffffff;
     padding: 32px;
@@ -325,6 +329,7 @@ button:hover {
     color: #432E1B;
     margin-bottom: 24px;
 }
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -338,7 +343,8 @@ label {
     font-size: 14px;
 }
 
-input, select {
+input,
+select {
     padding: 10px 14px;
     border: 1px solid #EAE0D5;
     border-radius: 8px;
@@ -348,9 +354,11 @@ input, select {
     outline: none;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border-color: #432E1B;
 }
+
 .card-right {
     display: flex;
     flex-direction: column;
@@ -378,4 +386,112 @@ input:focus, select:focus {
 .priority-low {
     background-color: #EAFAF1;
     color: #1E8449;
+}
+
+/* Login Page */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F9F7F2;
+    background-image: url('../doodles.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.login-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(67, 46, 27, 0.10);
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-card h1 {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.login-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+.login-card p {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+/* Chip selector */
+.chip-selector {
+    border: 1px solid #EAE0D5;
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 42px;
+    position: relative;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: #432E1B;
+    color: #F9F7F2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 2px;
+    gap: 6px;
+}
+
+.chip-remove {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chip-dropdown-btn {
+    color: #6B5E4C;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 2px;
+    display: inline-block;
+}
+
+.chip-dropdown-btn:hover {
+    color: #432E1B;
+}
+
+.chip-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #EAE0D5;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(67, 46, 27, 0.1);
+    z-index: 100;
+    width: 100%;
+    left: 0;
+    top: 100%;
+    margin-top: 4px;
+}
+
+.chip-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2D2926;
+}
+
+.chip-option:hover {
+    background-color: #F2EBE3;
+}
+
+.chip-option.selected {
+    color: #432E1B;
+    font-weight: 600;
 }
