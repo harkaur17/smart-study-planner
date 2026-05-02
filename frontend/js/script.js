@@ -1,15 +1,23 @@
 requireAuth();
-const courses = [
-    { name: "Advanced OOP", code: "EECS2030" },
-    { name: "Computer Organization", code: "EECS2021" }
-];
 
-const tasks = [
-    { name: "Assignment 1", course: "EECS2030", status: "TODO" },
-    { name: "Midterm", course: "EECS2021", status: "IN_PROGRESS" },
-    { name: "Lab Report", course: "EECS2030", status: "DONE" }
-];
+// fetch and display stats
+apiGet('/api/courses').then(function(data) {
+    document.getElementById('total-courses').textContent = data.length;
+});
 
-// Update stat cards
-document.getElementById("total-courses").textContent = courses.length;
-document.getElementById("total-tasks").textContent = tasks.length;
+apiGet('/api/tasks').then(function(data) {
+    document.getElementById('total-tasks').textContent = data.length;
+
+    // count upcoming tasks (due within 7 days)
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+
+    const upcoming = data.filter(function(task) {
+        if (!task.dueDate) return false;
+        const due = new Date(task.dueDate);
+        return due >= today && due <= nextWeek;
+    });
+
+    document.getElementById('upcoming-tasks').textContent = upcoming.length;
+});
