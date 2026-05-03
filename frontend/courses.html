@@ -18,6 +18,7 @@
         <li><a href="courses.html">Courses</a></li>
         <li><a href="tasks.html">Tasks</a></li>
       </ul>
+      <button onclick="logout()" class="btn-logout">Logout</button>
     </nav>
 
     <main class="container">
@@ -28,7 +29,7 @@
       </div>
 
       <!--Course list-->
-      <div class="card-list" id = "course-list">
+      <div class="card-list" id="course-list">
         <!--courses list here-->
       </div>
 
@@ -37,7 +38,11 @@
           <form id="add-course-form">
             <div class="form-group">
               <label for="course-name">Course Name</label>
-              <input type="text" id="course-name" placeholder="Enter course name" />
+              <input
+                type="text"
+                id="course-name"
+                placeholder="Enter course name"
+              />
             </div>
 
             <div class="form-group">
@@ -57,7 +62,7 @@
         </div>
       </div>
     </main>
-    <script src = "js/api.js"></script>
-    <script src = "js/courses.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/courses.js"></script>
   </body>
 </html>

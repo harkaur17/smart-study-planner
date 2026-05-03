@@ -51,7 +51,9 @@ saveBtn.addEventListener("click", function () {
   const newTask = {
     name: name,
     type: type,
-    courseCodes: selectedCourses.map(function(c) { return c.code; }),
+    courseCodes: selectedCourses.map(function (c) {
+      return c.code;
+    }),
     status: status,
     priority: priority,
     dueDate: dueDate,
@@ -74,22 +76,19 @@ saveBtn.addEventListener("click", function () {
       newDueDate: dueDate,
       newStatus: status,
       newPriority: priority,
-      newCourseCodes: selectedCourses.map(function(c) { return c.code; }),
+      newCourseCodes: selectedCourses.map(function (c) {
+        return c.code;
+      }),
     }).then(function (data) {
       tasks = tasks.map(function (task) {
         if (task.id === editTaskId) {
-          return {
-            id: editTaskId,
-            taskName: name,
-            taskType: type,
-            dueDate: dueDate,
-            taskStatus: status,
-            priority: priority,
-          };
+          return data; // use server response directly!
         }
         return task;
       });
       editTaskId = null;
+      selectedCourses = [];
+      renderChips();
       modal.style.display = "none";
       renderTasks();
       document.getElementById("add-task-form").reset();
@@ -168,7 +167,15 @@ function renderTasks() {
         <div class="task-card" onclick="openTaskDetail(${task.id})">
             <div class="card-info">
                 <h3>${task.taskName}</h3>
-                <p>${task.courses && task.courses[0] ? task.courses[0].code : "No course"}</p> 
+                <p>${
+                  task.courses && task.courses.length > 0
+                    ? task.courses
+                        .map(function (c) {
+                          return c.code;
+                        })
+                        .join(", ")
+                    : "No course"
+                }</p> 
                 <p>${task.dueDate || "No due date"}</p>
             </div>
             <div class="card-right">
@@ -221,7 +228,13 @@ function openTaskDetail(taskId) {
   document.getElementById("detail-name").textContent = task.taskName;
   document.getElementById("detail-type").textContent = task.taskType;
   document.getElementById("detail-course").textContent =
-    task.courses && task.courses[0] ? task.courses[0].code : "None";
+    task.courses && task.courses.length > 0
+      ? task.courses
+          .map(function (c) {
+            return c.code;
+          })
+          .join(", ")
+      : "None";
   document.getElementById("detail-dueDate").textContent =
     task.dueDate || "No due date";
   document.getElementById("detail-status").textContent = task.taskStatus;
