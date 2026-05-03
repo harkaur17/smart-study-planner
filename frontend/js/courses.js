@@ -1,4 +1,5 @@
 requireAuth();
+loadSidebarUser();
 let courses = [];
 
 //Get modal elements

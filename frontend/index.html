@@ -8,52 +8,79 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Smart Study Planner</title>
+    <title>Dashboard</title>
   </head>
   <body>
-    <nav class="navbar">
-      <span class="brand">Smart Study Planner</span>
-      <ul>
-        <li><a href="index.html">Dashboard</a></li>
-        <li><a href="courses.html">Courses</a></li>
-        <li><a href="tasks.html">Tasks</a></li>
-      </ul>
-      <button onclick="logout()" class="btn-logout">Logout</button>
-    </nav>
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html" class="active">Dashboard</a>
+          <a href="courses.html">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
 
-    <main class="wrapper">
-      <div class="dashboard-header">
-        <h1>Dashboard</h1>
-        <p>Welcome to your personal study planner.</p>
-      </div>
+      <!-- Main Content -->
+      <div class="page-content">
+        <div class="dashboard-header">
+          <h1>Dashboard</h1>
+          <p>Welcome back to your study planner.</p>
+        </div>
 
-      <div class="dashboard-layout">
-        <!--left side - main content-->
-        <div class="main-content">
-          <!--stats div-->
-          <div class="stats">
-            <div class="stat-card">
-              <h2>Total Courses</h2>
-              <p class="stat-number" id="total-courses">0</p>
-            </div>
-            <div class="stat-card">
-              <h2>Total Tasks</h2>
-              <p class="stat-number" id="total-tasks">0</p>
-            </div>
-            <div class="stat-card">
-              <h2>Upcoming Tasks</h2>
-              <p class="stat-number" id="upcoming-tasks">0</p>
-            </div>
+        <div class="stats">
+          <div class="stat-card">
+            <h2>Total Courses</h2>
+            <p class="stat-number" id="total-courses">0</p>
+          </div>
+          <div class="stat-card">
+            <h2>Total Tasks</h2>
+            <p class="stat-number" id="total-tasks">0</p>
+          </div>
+          <div class="stat-card">
+            <h2>Upcoming Tasks</h2>
+            <p class="stat-number" id="upcoming-tasks">0</p>
           </div>
         </div>
 
-        <!--right side - upcoming tasks section-->
-        <div class="upcoming-section">
-          <h2>Upcoming Tasks This Week</h2>
-          <div class="upcoming-tasks"></div>
+        <div class="dashboard-layout">
+          <div class="main-content">
+            <p
+              style="
+                font-size: 13px;
+                font-weight: 500;
+                color: #1c1410;
+                margin: 0 0 12px;
+              "
+            >
+              Upcoming This Week
+            </p>
+            <div class="upcoming-tasks" id="upcoming-list"></div>
+          </div>
+          <div class="upcoming-section">
+            <h2>Recent Activity</h2>
+            <div id="activity-list" class="upcoming-tasks"></div>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
     <script src="js/api.js"></script>
     <script src="js/script.js"></script>
   </body>

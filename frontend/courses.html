@@ -8,60 +8,87 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Courses</title>
+    <title>Courses - StudyHive</title>
   </head>
   <body>
-    <nav class="navbar">
-      <span class="brand">Smart Study Planner</span>
-      <ul>
-        <li><a href="index.html">Dashboard</a></li>
-        <li><a href="courses.html">Courses</a></li>
-        <li><a href="tasks.html">Tasks</a></li>
-      </ul>
-      <button onclick="logout()" class="btn-logout">Logout</button>
-    </nav>
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html" class="active">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
 
-    <main class="container">
-      <!--Header row-->
-      <div class="header-card">
-        <h1>Courses</h1>
-        <button>Add Course</button>
-      </div>
+      <!-- Main Content -->
+      <div class="page-content">
+        <div class="header-card">
+          <h1>Courses</h1>
+          <button>Add Course</button>
+        </div>
 
-      <!--Course list-->
-      <div class="card-list" id="course-list">
-        <!--courses list here-->
-      </div>
+        <div class="card-list" id="course-list"></div>
 
-      <div class="modal">
-        <div class="modal-content">
-          <form id="add-course-form">
-            <div class="form-group">
-              <label for="course-name">Course Name</label>
-              <input
-                type="text"
-                id="course-name"
-                placeholder="Enter course name"
-              />
+        <!-- Add/Edit Course Modal -->
+        <div class="modal">
+          <div class="modal-content">
+            <form id="add-course-form">
+              <div class="form-group">
+                <label for="course-name">Course Name</label>
+                <input
+                  type="text"
+                  id="course-name"
+                  placeholder="Enter course name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="course-code">Course Code</label>
+                <input
+                  type="text"
+                  id="course-code"
+                  placeholder="Enter course code"
+                />
+              </div>
+              <div class="form-group">
+                <label for="course-semester">Semester</label>
+                <select id="course-semester">
+                  <option value="">Select semester</option>
+                  <option value="Fall">Fall</option>
+                  <option value="Winter">Winter</option>
+                  <option value="Summer">Summer</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="course-year">Year</label>
+                <input type="number" id="course-year" placeholder="e.g. 2026" />
+              </div>
+            </form>
+            <div class="button-group">
+              <button id="cancel-course">Cancel</button>
+              <button id="save-course">Save</button>
             </div>
-
-            <div class="form-group">
-              <label for="course-code">Course Code</label>
-              <input
-                type="text"
-                id="course-code"
-                placeholder="Enter course code"
-              />
-            </div>
-          </form>
-
-          <div class="button-group">
-            <button id="cancel-course">Cancel</button>
-            <button id="save-course">Save</button>
           </div>
         </div>
       </div>
-    </main>
+    </div>
     <script src="js/api.js"></script>
     <script src="js/courses.js"></script>
   </body>

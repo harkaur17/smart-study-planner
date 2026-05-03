@@ -3,7 +3,6 @@ package studyPlanner.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import studyPlanner.model.User;
 import studyPlanner.repository.UserRepository;
 import studyPlanner.security.JwtUtil;
@@ -20,39 +19,28 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Register a new user
-    public String register(String name, String email, String password) {
-        // Check if email already exists
+    public String register(String name, String username, String email, String password) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
-
-        // Hash the password before saving
-        String hashedPassword = passwordEncoder.encode(password);
-
-        // Create and save the user
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new RuntimeException("Username already taken");
+        }
         User user = new User();
         user.setName(name);
+        user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(hashedPassword);
+        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
-
-        // Return a token so they're logged in immediately after registering
         return jwtUtil.generateToken(email);
     }
 
-    // Login an existing user
     public String login(String email, String password) {
-        // Find the user by email
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Check if password matches the hashed one in the database
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
-
-        // Return a token
         return jwtUtil.generateToken(email);
     }
 }
