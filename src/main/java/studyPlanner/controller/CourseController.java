@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import studyPlanner.service.CourseService;
 import studyPlanner.model.Course;
 import java.util.List;
+import studyPlanner.dto.TaskDTO;
 
 @RestController // tells spring that this handles HTTP requests
 @RequestMapping("/api/courses") // sets the base URL
@@ -60,5 +61,21 @@ public class CourseController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Course> getCourse(@PathVariable Long id) {
+        Course course = courseService.getCourse(id);
+        if (course == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(course);
+    }
+
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TaskDTO>> getCourseTasks(@PathVariable Long id) {
+        List<TaskDTO> tasks = courseService.getTasksForCourse(id);
+        if (tasks == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(tasks);
     }
 }

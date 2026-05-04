@@ -12,6 +12,7 @@ import studyPlanner.repository.CourseRepository;
 import studyPlanner.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import studyPlanner.dto.TaskDTO;
 
 @Service
 public class CourseService {
@@ -24,6 +25,12 @@ public class CourseService {
 
     @Autowired
     private ActivityLogRepository activityLogRepository;
+
+    private static final String DEFAULT_COLOR = "#6B4C3B";
+
+    private String randomColor() {
+        return DEFAULT_COLOR;
+    }
 
     // get current logged in user from JWT token
     private User getCurrentUser() {
@@ -45,6 +52,7 @@ public class CourseService {
         if (existing.isPresent())
             return null;
         Course course = new Course(name, code, user);
+        course.setColor(randomColor());
         Course saved = courseRepository.save(course);
         activityLogRepository.save(new ActivityLog(
                 user, ActivityLog.ActionType.COURSE_ADDED,
@@ -84,5 +92,47 @@ public class CourseService {
             course.setCode(newCode);
         }
         return courseRepository.save(course);
+    }
+
+    public User getCurrentUserPublic() {
+        return getCurrentUser();
+    }
+
+    public List<TaskDTO> getTasksForCourse(Long courseId) {
+        User user = getCurrentUser();
+        Optional<Course> optional = courseRepository.findById(courseId);
+        if (!optional.isPresent())
+            return null;
+        Course course = optional.get();
+        if (!course.getUser().getId().equals(user.getId()))
+            return null;
+        return course.getTasks().stream()
+                .map(this::toTaskDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    private TaskDTO toTaskDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.id = task.getId();
+        dto.taskName = task.getTaskName();
+        dto.taskType = task.getTaskType();
+        dto.dueDate = task.getDueDate();
+        dto.taskStatus = task.getTaskStatus().name();
+        dto.priority = task.getPriority().name();
+        dto.courses = task.getCourses().stream()
+                .map(c -> new TaskDTO.CourseInfo(c.getId(), c.getCode(), c.getName()))
+                .collect(java.util.stream.Collectors.toList());
+        return dto;
+    }
+
+    public Course getCourse(Long id) {
+        User user = getCurrentUser();
+        Optional<Course> optional = courseRepository.findById(id);
+        if (!optional.isPresent())
+            return null;
+        Course course = optional.get();
+        if (!course.getUser().getId().equals(user.getId()))
+            return null;
+        return course;
     }
 }

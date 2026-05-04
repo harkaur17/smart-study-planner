@@ -63,11 +63,18 @@ saveBtn.addEventListener("click", function () {
       newCode: code,
     }).then(function (data) {
       courses = courses.map(function (course) {
-    if (course.id === editCourseId) {
-        return { id: editCourseId, name: name, code: code };
-    }
-    return course;
-});
+        if (course.id === editCourseId) {
+          return {
+            id: editCourseId,
+            name: name,
+            code: code,
+            color: course.color,
+            semester: course.semester,
+            year: course.year,
+          };
+        }
+        return course;
+      });
       editCourseId = null;
       modal.style.display = "none";
       renderCourses();
@@ -79,43 +86,48 @@ saveBtn.addEventListener("click", function () {
 
 function renderCourses() {
   const courseList = document.getElementById("course-list");
-  courseList.innerHTML = ""; //clear the first list
+  courseList.innerHTML = "";
 
   courses.forEach(function (course) {
+    const color = course.color || "#1D9E75";
+    const lightColor = color + "22"; // transparent version for background
+
     courseList.innerHTML += `
-            <div class="course-card">
-                <div class="card-info">
-                    <h3>${course.code}</h3>
-                    <p>${course.name}</p>
-                </div>
-                <div class="button-group">
-                    <button class="btn-edit" onclick="event.stopPropagation(); openEditCourse(${course.id})">Edit</button>
-                    <button class="btn-delete" onclick="event.stopPropagation(); deleteCourse(${course.id})">Delete</button>
-                  </div>
-                </div>
-            </div>
-        `;
+      <div class="course-card-new" onclick="window.location.href='course-detail.html?id=${course.id}'">
+        <div class="course-card-banner" style="background-color: ${color};">
+          <span class="course-card-code">${course.code}</span>
+        </div>
+        <div class="course-card-body">
+          <h3 class="course-card-name">${course.name}</h3>
+          <p class="course-card-meta">${course.semester ? course.semester + " " + (course.year || "") : "No semester set"}</p>
+          <div class="course-card-footer">
+            <button class="btn-edit" onclick="event.stopPropagation(); openEditCourse(${course.id})">Edit</button>
+            <button class="btn-delete" onclick="event.stopPropagation(); deleteCourse(${course.id})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
   });
 }
 
 function deleteCourse(courseId) {
-    apiDelete("/api/courses/" + courseId).then(function () {
-        courses = courses.filter(function (course) {
-            return course.id !== courseId;
-        });
-        renderCourses();
+  apiDelete("/api/courses/" + courseId).then(function () {
+    courses = courses.filter(function (course) {
+      return course.id !== courseId;
     });
+    renderCourses();
+  });
 }
 
 function openEditCourse(courseId) {
-    const course = courses.find(function (c) {
-        return c.id === courseId;
-    });
-    //pre-fill all form fields
-    document.getElementById("course-name").value = course.name;
-    document.getElementById("course-code").value = course.code;
-    editCourseId = courseId;
-    modal.style.display = "flex";
+  const course = courses.find(function (c) {
+    return c.id === courseId;
+  });
+  //pre-fill all form fields
+  document.getElementById("course-name").value = course.name;
+  document.getElementById("course-code").value = course.code;
+  editCourseId = courseId;
+  modal.style.display = "flex";
 }
 
 apiGet("/api/courses").then(function (data) {

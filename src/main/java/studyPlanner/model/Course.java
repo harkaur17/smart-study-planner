@@ -39,6 +39,9 @@ public class Course {
 	@JoinTable(name = "course_tasks", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "task_id"))
 	private List<Task> tasks = new ArrayList<>();
 
+	@Column
+	private String color;
+
 	// Constructors
 	public Course() {
 	}
@@ -82,6 +85,10 @@ public class Course {
 		return tasks;
 	}
 
+	public String getColor(){
+		return color;
+	}
+
 	// Setters
 	public void setId(Long id) {
 		this.id = id;
@@ -119,5 +126,9 @@ public class Course {
 
 	public void removeTask(Task task) {
 		this.tasks.remove(task);
+	}
+
+	public void setColor(String color){
+		this.color = color;
 	}
 }

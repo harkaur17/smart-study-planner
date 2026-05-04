@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <title>Course Detail - StudyHive</title>
+  </head>
+  <body>
+    <div class="app-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html" class="active">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="page-content" style="padding:0;">
+
+        <!-- Course Banner -->
+        <div id="course-banner" style="height:160px; display:flex; align-items:flex-end; padding:24px 32px;">
+          <div>
+            <a href="courses.html" style="color:rgba(255,255,255,0.7); font-size:13px; text-decoration:none;">← Back to Courses</a>
+            <h1 id="course-code" style="color:#fff; font-size:28px; font-weight:600; margin:8px 0 0;"></h1>
+          </div>
+        </div>
+
+        <!-- Course Info -->
+        <div style="padding:32px;">
+          <p id="course-name" style="font-size:18px; color:#1C1410; font-weight:500; margin:0 0 4px;"></p>
+          <p id="course-meta" style="font-size:13px; color:#8B7355; margin:0 0 24px;"></p>
+
+          <!-- Progress Bar -->
+          <div style="margin-bottom:32px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:13px; color:#1C1410; font-weight:500;">Progress</span>
+              <span style="font-size:13px; color:#8B7355;" id="progress-text">0/0 tasks done</span>
+            </div>
+            <div style="background:#E8DDD0; border-radius:99px; height:8px;">
+              <div id="progress-bar" style="background:#6B4C3B; height:8px; border-radius:99px; width:0%; transition:width 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Tasks Header -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:16px; font-weight:500; color:#1C1410; margin:0;">Tasks</h2>
+            <button onclick="openAddTask()" style="background:#1C1410; color:#F9F5EE; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer; font-family:inherit;">+ Add Task</button>
+          </div>
+
+          <!-- Task List -->
+          <div id="course-task-list"></div>
+        </div>
+
+        <!-- Add Task Modal -->
+        <div class="modal" id="task-modal">
+          <div class="modal-content">
+            <form id="add-task-form">
+              <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="task-name" placeholder="Enter task name"/>
+              </div>
+              <div class="form-group">
+                <label>Task Type</label>
+                <input type="text" id="task-type" placeholder="e.g. Assignment, Quiz"/>
+              </div>
+              <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" id="due-date"/>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select id="task-status">
+                  <option value="TODO">TODO</option>
+                  <option value="IN_PROGRESS">IN PROGRESS</option>
+                  <option value="DONE">DONE</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Priority</label>
+                <select id="task-priority">
+                  <option value="HIGH">HIGH</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="LOW">LOW</option>
+                </select>
+              </div>
+            </form>
+            <div class="button-group">
+              <button id="cancel-task">Cancel</button>
+              <button id="save-task">Save</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/course-detail.js"></script>
+  </body>
+</html>
