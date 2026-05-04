@@ -8,108 +8,132 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Tasks</title>
+    <title>Tasks - StudyHive</title>
   </head>
   <body>
-    <nav class="navbar">
-      <span class="brand">Smart Study Planner</span>
-      <ul>
-        <li><a href="index.html">Dashboard</a></li>
-        <li><a href="courses.html">Courses</a></li>
-        <li><a href="tasks.html">Tasks</a></li>
-      </ul>
-      <button onclick="logout()" class="btn-logout">Logout</button>
-    </nav>
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html">Courses</a>
+          <a href="tasks.html" class="active">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
 
-    <main class="container">
-      <div class="header-card">
-        <h1>Tasks</h1>
-        <button>Add Task</button>
-      </div>
+      <!-- Main Content -->
+      <div class="page-content">
+        <div class="header-card">
+          <h1>Tasks</h1>
+          <button>Add Task</button>
+        </div>
 
-      <div class="card-list" id="task-list">
-        <!--tasks list here-->
-      </div>
+        <div class="card-list" id="task-list"></div>
 
-      <div class="modal">
-        <div class="modal-content">
-          <form id="add-task-form">
-            <div class="form-group">
-              <label for="task-name">Task Name</label>
-              <input type="text" id="task-name" placeholder="Enter task name" />
-            </div>
-
-            <div class="form-group">
-              <label for="task-type">Task Type</label>
-              <input type="text" id="task-type" placeholder="Enter task type" />
-              <!--TODO: option to add tasks types, added by the user-->
-            </div>
-
-            <div class="form-group">
-              <label>Courses</label>
-              <div class="chip-selector">
-                <div id="selected-chips"></div>
-                <div class="chip-dropdown-btn" id="course-dropdown-btn">
-                  + Add course ▼
-                </div>
-                <div
-                  class="chip-dropdown"
-                  id="course-dropdown"
-                  style="display: none"
-                ></div>
+        <!-- Add/Edit Task Modal -->
+        <div class="modal">
+          <div class="modal-content">
+            <form id="add-task-form">
+              <div class="form-group">
+                <label for="task-name">Task Name</label>
+                <input
+                  type="text"
+                  id="task-name"
+                  placeholder="Enter task name"
+                />
               </div>
+              <div class="form-group">
+                <label for="task-type">Task Type</label>
+                <input
+                  type="text"
+                  id="task-type"
+                  placeholder="Enter task type"
+                />
+              </div>
+              <div class="form-group">
+                <label>Courses</label>
+                <div class="chip-selector">
+                  <div id="selected-chips"></div>
+                  <div class="chip-dropdown-btn" id="course-dropdown-btn">
+                    + Add course ▼
+                  </div>
+                  <div
+                    class="chip-dropdown"
+                    id="course-dropdown"
+                    style="display: none"
+                  ></div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="due-date">Due Date</label>
+                <input type="date" id="due-date" />
+              </div>
+              <div class="form-group">
+                <label for="task-status">Task Status</label>
+                <select id="task-status">
+                  <option value="" disabled selected>Select status</option>
+                  <option value="TODO">TODO</option>
+                  <option value="IN_PROGRESS">IN PROGRESS</option>
+                  <option value="DONE">DONE</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="task-priority">Task Priority</label>
+                <select id="task-priority">
+                  <option value="" disabled selected>Select priority</option>
+                  <option value="HIGH">HIGH</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="LOW">LOW</option>
+                </select>
+              </div>
+            </form>
+            <div class="button-group">
+              <button id="cancel-task">Cancel</button>
+              <button id="save-task">Save</button>
             </div>
+          </div>
+        </div>
 
-            <div class="form-group">
-              <label for="due-date">Due Date</label>
-              <input type="date" id="due-date" />
+        <!-- Task Detail Modal -->
+        <div class="modal" id="detail-modal">
+          <div class="modal-content">
+            <h2>Task Details</h2>
+            <div class="detail-group">
+              <p><strong>Name: </strong><span id="detail-name"></span></p>
+              <p><strong>Type: </strong><span id="detail-type"></span></p>
+              <p><strong>Course: </strong><span id="detail-course"></span></p>
+              <p>
+                <strong>Due Date: </strong><span id="detail-dueDate"></span>
+              </p>
+              <p><strong>Status: </strong><span id="detail-status"></span></p>
+              <p>
+                <strong>Priority: </strong><span id="detail-priority"></span>
+              </p>
             </div>
-
-            <div class="form-group">
-              <label for="task-status">Task Status</label>
-              <select id="task-status">
-                <option value="" disabled selected>Select status</option>
-                <option value="TODO">TODO</option>
-                <option value="IN_PROGRESS">IN PROGRESS</option>
-                <option value="DONE">DONE</option>
-              </select>
+            <div class="button-group">
+              <button id="close-detail">Close</button>
             </div>
-
-            <div class="form-group">
-              <label for="task-priority">Task Priority</label>
-              <select id="task-priority">
-                <option value="" disabled selected>Select priority</option>
-                <option value="HIGH">HIGH</option>
-                <option value="MEDIUM">MEDIUM</option>
-                <option value="LOW">LOW</option>
-              </select>
-            </div>
-          </form>
-
-          <div class="button-group">
-            <button id="cancel-task">Cancel</button>
-            <button id="save-task">Save</button>
           </div>
         </div>
       </div>
-
-      <div class="modal" id="detail-modal">
-        <div class="modal-content">
-          <h2>Task Details</h2>
-          <div class="detail-group">
-            <p><strong>Name: </strong><span id="detail-name"></span></p>
-            <p><strong>Type: </strong><span id="detail-type"></span></p>
-            <p><strong>Course: </strong><span id="detail-course"></span></p>
-            <p><strong>Due Date: </strong><span id="detail-dueDate"></span></p>
-            <p><strong>Status: </strong><span id="detail-status"></span></p>
-            <p><strong>Priority: </strong><span id="detail-priority"></span></p>
-          </div>
-          <div class="button-group">
-            <button id="close-detail">Close</button>
-          </div>
-        </div>
-      </div>
-    </main>
+    </div>
     <script src="js/api.js"></script>
     <script src="js/tasks.js"></script>
   </body>

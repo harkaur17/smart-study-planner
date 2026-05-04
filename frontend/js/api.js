@@ -30,7 +30,7 @@ function apiGet(endpoint) {
       Authorization: "Bearer " + getToken(),
     },
   }).then(function (response) {
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
       if (!window.location.href.includes("login.html")) {
         logout();
       }
@@ -75,5 +75,23 @@ function apiDelete(endpoint) {
     headers: {
       Authorization: "Bearer " + getToken(),
     },
+  });
+}
+
+//load user info in sidebar
+function loadSidebarUser() {
+  apiGet("/api/user/me").then(function (data) {
+    if (!data) return;
+    document.getElementById("sidebar-name").textContent = data.name;
+    document.getElementById("sidebar-username").textContent =
+      "@" + data.username;
+    const initials = data.name
+      .split(" ")
+      .map(function (n) {
+        return n[0];
+      })
+      .join("")
+      .toUpperCase();
+    document.getElementById("sidebar-avatar").textContent = initials;
   });
 }

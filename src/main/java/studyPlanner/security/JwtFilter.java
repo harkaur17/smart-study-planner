@@ -22,9 +22,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-                                    throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
 
         // Get the Authorization header
         String authHeader = request.getHeader("Authorization");
@@ -48,8 +48,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.extractEmail(token);
 
         // Tell Spring Security this user is authenticated
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, List.of());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null,
+                List.of());
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request));
@@ -58,5 +58,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Pass the request through to the controller
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/");
     }
 }

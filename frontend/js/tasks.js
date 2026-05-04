@@ -1,4 +1,5 @@
 requireAuth();
+loadSidebarUser();
 let tasks = [];
 let selectedCourses = []; //array of {code, name} objects
 let allCourses = [];

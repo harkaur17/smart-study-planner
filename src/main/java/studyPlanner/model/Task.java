@@ -1,10 +1,9 @@
 package studyPlanner.model;
 
-import java.util.ArrayList;
-import java.time.LocalDate;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -24,15 +23,16 @@ public class Task {
 	@Column
 	private LocalDate dueDate;
 
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+
 	@JsonIgnore
 	@ManyToMany(mappedBy = "tasks")
 	private List<Course> courses = new ArrayList<>();
 
-	// enum for status of the task
 	public enum Status {
-		TODO,
-		IN_PROGRESS,
-		DONE
+		TODO, IN_PROGRESS, DONE
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -40,96 +40,95 @@ public class Task {
 	private Status status;
 
 	public enum Priority {
-		HIGH,
-		MEDIUM,
-		LOW
+		HIGH, MEDIUM, LOW
 	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Priority priority;
 
-	// constructor #1 for tasks with all the attributes, except priority
-	public Task(String taskName, String taskType, LocalDate dueDate, Status status) {
-
-		if (taskName == null || taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task name cannot be null.");
-		}
-		if (taskType == null || taskType.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task type cannot be null.");
-		}
-		if (status == null) {
-			throw new IllegalArgumentException("Task Status cannot be null.");
-		}
-		this.taskName = taskName;
-		this.dueDate = dueDate;
-		this.taskType = taskType;
-		this.status = status;
-		this.courses = new ArrayList<Course>();
-		this.priority = Priority.MEDIUM; // default option set to MEDIUM
+	// Constructors
+	public Task() {
 	}
 
-	// constructor #2 for tasks with no due date
-	public Task(String taskName, String taskType, Status status) {
-
-		if (taskName == null || taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task name cannot be null.");
-		}
-		if (taskType == null || taskType.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task type cannot be null.");
-		}
-		if (status == null) {
-			throw new IllegalArgumentException("Task Status cannot be null.");
-		}
+	public Task(String taskName, String taskType, LocalDate dueDate, Status status, Priority priority, User user) {
 		this.taskName = taskName;
 		this.taskType = taskType;
+		this.dueDate = dueDate;
 		this.status = status;
-		this.dueDate = null;
-		this.courses = new ArrayList<Course>();
-		this.priority = Priority.MEDIUM; // default option set to MEDIUM
+		this.priority = priority;
+		this.user = user;
 	}
 
-	// constructor #3 for tasks with all the attributes
-	public Task(String taskName, String taskType, LocalDate dueDate, Status status, Priority priority) {
-
-		if (taskName == null || taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task name cannot be null.");
-		}
-		if (taskType == null || taskType.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task type cannot be null.");
-		}
-		if (status == null) {
-			throw new IllegalArgumentException("Task Status cannot be null.");
-		}
+	public Task(String taskName, String taskType, Status status, Priority priority, User user) {
 		this.taskName = taskName;
-		this.dueDate = dueDate;
 		this.taskType = taskType;
 		this.status = status;
-		this.courses = new ArrayList<Course>();
+		this.priority = priority;
+		this.user = user;
+	}
+
+	// Getters
+	public Long getId() {
+		return id;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public String getTaskType() {
+		return taskType;
+	}
+
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public Status getTaskStatus() {
+		return status;
+	}
+
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public List<Course> getCourses() {
+		return new ArrayList<>(courses);
+	}
+
+	// Setters
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public void setTaskType(String taskType) {
+		this.taskType = taskType;
+	}
+
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
-
-	// constructor #4 for tasks with priority and no due date
-	public Task(String taskName, String taskType, Status status, Priority priority) {
-
-		if (taskName == null || taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task name cannot be null.");
-		}
-		if (taskType == null || taskType.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task type cannot be null.");
-		}
-		if (status == null) {
-			throw new IllegalArgumentException("Task Status cannot be null.");
-		}
-		this.taskName = taskName;
-		this.dueDate = null;
-		this.taskType = taskType;
-		this.status = status;
-		this.courses = new ArrayList<Course>();
-		this.priority = priority;
-	}
-
-	protected Task(){}
 
 	public void addCourse(Course c) {
 		if (c == null)
@@ -140,130 +139,13 @@ public class Task {
 		}
 	}
 
-	public void setDueDate(LocalDate dueDate) {
-		// Not needed?
-		// TODO: later update this so that if the dueDate is from past then throw
-		// exception
-		if (dueDate == null) {
-			throw new IllegalArgumentException("Task Status cannot be null.");
-		}
-		this.dueDate = dueDate;
-	}
-
-	// GETTERS
-
-	public String getTaskName() {
-		return this.taskName;
-	}
-
-	public Status getTaskStatus() {
-		return this.status;
-	}
-
-	public String getTaskType() {
-		return this.taskType;
-	}
-
-	public LocalDate getDueDate() {
-		return this.dueDate;
-	}
-
-	public int getCourseCount() {
-		return this.courses.size();
-	}
-
-	public ArrayList<Course> getCourses() {
-		return new ArrayList<Course>(this.courses);
-	}
-
-	public Priority getPriority() {
-		return this.priority;
-	}
-
-	public Long getId(){
-		return this.id;
-	}
-
-	// SETTERS
-
-	public void setName(String taskName) {
-		if (taskName == null || taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task name cannot be empty.");
-		}
-		this.taskName = taskName;
-	}
-
-	public void setTaskType(String taskType) {
-		if (taskType == null || taskType.trim().isEmpty()) {
-			throw new IllegalArgumentException("Task type cannot be empty.");
-		}
-		this.taskType = taskType.trim();
-	}
-
-	public void setStatus(Status status) {
-		if (status == null) {
-			throw new IllegalArgumentException("Status cannot be null.");
-		}
-		this.status = status;
-	}
-
-	public void setPriority(Priority priority) {
-		if (priority == null) {
-			throw new IllegalArgumentException("Priority cannot be null.");
-		}
-		this.priority = priority;
-	}
-
 	public boolean removeCourse(Course course) {
-		if (course == null) {
+		if (course == null)
 			return false;
-		}
 		boolean removed = courses.remove(course);
 		if (removed) {
 			course.removeTask(this);
 		}
 		return removed;
 	}
-
-	public boolean removeCourseByCode(String courseCode) {
-
-		if (courseCode == null) {
-			return false;
-		}
-		courseCode = courseCode.trim().toUpperCase();
-		for (Course c : this.courses) {
-			if (c.getCode().equals(courseCode)) {
-				boolean removed = this.courses.remove(c);
-				if (removed) {
-					c.removeTask(this);
-				}
-				return removed;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-
-		result.append(String.format("Task: %s\n", this.taskName));
-		result.append(String.format("Task Type: %s\n", this.taskType));
-		result.append(String.format("Status: %s\n", this.status));
-		result.append(String.format("Priority: %s\n", this.priority));
-
-		if (this.dueDate != null) {
-			result.append(String.format("Due Date: %s\n", this.dueDate));
-		}
-
-		if (!this.courses.isEmpty()) {
-			result.append("Courses:\n");
-			for (int i = 0; i < this.courses.size(); i++) {
-				result.append(String.format("  %d. %s\n", i + 1, this.courses.get(i)));
-			}
-		}
-
-		return result.toString();
-	}
-
 }
