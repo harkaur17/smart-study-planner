@@ -708,3 +708,150 @@ select:focus {
     display: flex;
     gap: 8px;
 }
+
+/* ── Calendar Layout ── */
+.calendar-header {
+    padding: 24px 28px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(107, 76, 59, 0.15);
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.calendar-nav h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1c1410;
+    min-width: 140px;
+    text-align: center;
+}
+
+.calendar-nav button {
+    background: white;
+    border: 1px solid rgba(107, 76, 59, 0.25);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #6b4c3b;
+}
+
+.calendar-nav button:hover {
+    background: #f0e8df;
+}
+
+/* ── Day Headers ── */
+.calendar-grid-wrapper {
+    padding: 16px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.calendar-day-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.calendar-day-headers span {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #8b7355;
+    padding: 4px 0;
+}
+
+/* ── Calendar Grid ── */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+/* ── Day Cells ── */
+.calendar-cell {
+    background: white;
+    border: 1px solid rgba(107, 76, 59, 0.12);
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.calendar-cell.other-month {
+    background: rgba(249, 245, 238, 0.5);
+    border-color: rgba(107, 76, 59, 0.06);
+}
+
+.calendar-cell.today {
+    border: 2px solid #d2a050;
+}
+
+.cell-day-num {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b4c3b;
+    margin-bottom: 2px;
+}
+
+.cell-day-num.today-num {
+    background: #d2a050;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+/* ── Task Chips ── */
+.task-chip {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 3px solid transparent;
+}
+
+.chip-todo {
+    background: rgba(107, 76, 59, 0.08);
+    color: #6b4c3b;
+}
+
+.chip-progress {
+    background: rgba(210, 160, 80, 0.15);
+    color: #8b5e1a;
+}
+
+.chip-done {
+    background: rgba(59, 107, 76, 0.1);
+    color: #3b6b4c;
+    text-decoration: line-through;
+}
+
+.chip-high {
+    border-left-color: #c0392b;
+}
+
+.chip-med {
+    border-left-color: #d2a050;
+}
+
+.chip-low {
+    border-left-color: #8b7355;
+}
