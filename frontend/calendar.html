@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Calendar - StudyHive</title>
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html" class="active">Calendar</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="page-content">
+        <div class="calendar-header">
+          <div class="calendar-nav">
+            <button id="prevMonth">‹</button>
+            <h2 id="monthTitle"></h2>
+            <button id="nextMonth">›</button>
+          </div>
+        </div>
+
+        <div class="calendar-grid-wrapper">
+          <div class="calendar-day-headers">
+            <span>Sun</span><span>Mon</span><span>Tue</span> <span>Wed</span
+            ><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- JS will fill this in -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Detail Modal -->
+      <div class="modal" id="task-detail-modal">
+        <div class="modal-content">
+          <h2 id="detail-task-name"></h2>
+          <div class="detail-group">
+            <p><strong>Type: </strong><span id="detail-task-type"></span></p>
+            <p>
+              <strong>Course: </strong><span id="detail-task-course"></span>
+            </p>
+            <p><strong>Due Date: </strong><span id="detail-task-due"></span></p>
+            <p>
+              <strong>Status: </strong><span id="detail-task-status"></span>
+            </p>
+            <p>
+              <strong>Priority: </strong><span id="detail-task-priority"></span>
+            </p>
+          </div>
+          <div class="button-group">
+            <button class="btn-delete" id="detail-delete-btn">Delete</button>
+            <button class="btn-edit" id="detail-edit-btn">Edit</button>
+            <button class="btn-edit" id="detail-close-btn">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Task Modal -->
+      <div class="modal" id="add-task-modal">
+        <div class="modal-content">
+          <h2>Add Task</h2>
+          <div class="form-group">
+            <label>Task Name</label>
+            <input
+              type="text"
+              id="cal-task-name"
+              placeholder="Enter task name"
+            />
+          </div>
+          <div class="form-group">
+            <label>Task Type</label>
+            <input
+              type="text"
+              id="cal-task-type"
+              placeholder="e.g. Assignment, Quiz, Lab"
+            />
+          </div>
+          <div class="form-group">
+            <label>Course</label>
+            <select id="cal-task-course"></select>
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" id="cal-task-due" />
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="cal-task-priority">
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="cal-task-status">
+              <option value="TODO">To Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="DONE">Done</option>
+            </select>
+          </div>
+          <div class="button-group">
+            <button class="btn-edit" id="cal-cancel-btn">Cancel</button>
+            <button id="cal-save-btn">Save Task</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/calendar.js"></script>
+  </body>
+</html>
