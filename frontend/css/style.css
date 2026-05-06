@@ -855,3 +855,27 @@ select:focus {
 .chip-low {
     border-left-color: #8b7355;
 }
+.cal-plus-btn {
+  display: none;
+  margin-top: auto;
+  color: #8b7355;
+  font-size: 16px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #8b7355;
+  line-height: 1;
+}
+
+.calendar-cell:hover .cal-plus-btn {
+  display: flex;
+}
+
+.cal-plus-btn:hover {
+  background: #1c1410;
+  color: #f9f5ee;
+  border-color: #1c1410;
+}
