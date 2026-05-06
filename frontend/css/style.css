@@ -855,27 +855,156 @@ select:focus {
 .chip-low {
     border-left-color: #8b7355;
 }
+
 .cal-plus-btn {
-  display: none;
-  margin-top: auto;
-  color: #8b7355;
-  font-size: 16px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 1px solid #8b7355;
-  line-height: 1;
+    display: none;
+    margin-top: auto;
+    color: #8b7355;
+    font-size: 16px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #8b7355;
+    line-height: 1;
 }
 
 .calendar-cell:hover .cal-plus-btn {
-  display: flex;
+    display: flex;
 }
 
 .cal-plus-btn:hover {
-  background: #1c1410;
-  color: #f9f5ee;
-  border-color: #1c1410;
+    background: #1c1410;
+    color: #f9f5ee;
+    border-color: #1c1410;
+}
+
+/* ── Login Page Redesign ── */
+.login-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-left {
+    flex: 1;
+    background: #1C1410;
+    background-image: url('../doodles.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
+}
+
+.login-brand {
+    font-size: 20px;
+    font-weight: 600;
+    color: #F5E6D0;
+    margin-bottom: 48px;
+}
+
+.login-tagline {
+    font-size: 32px;
+    font-weight: 600;
+    color: #F5E6D0;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+.login-tagline-sub {
+    font-size: 14px;
+    color: rgba(245, 230, 208, 0.5);
+    line-height: 1.7;
+}
+
+.login-features {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: rgba(245, 230, 208, 0.6);
+}
+
+.login-feature-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #D2A050;
+    flex-shrink: 0;
+}
+
+.login-right {
+    width: 420px;
+    flex-shrink: 0;
+    background-color: #F9F5EE;
+    background-image: url('../doodles.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    position: relative;
+}
+
+.login-right .login-card {
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.login-right .login-card h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.login-right .login-card p {
+    font-size: 13px;
+    color: #8B7355;
+    margin-bottom: 28px;
+}
+
+.login-right .login-card button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    margin-top: 4px;
+    border-radius: 8px;
+}
+
+.login-toggle {
+    text-align: center;
+    margin-top: 16px !important;
+    margin-bottom: 0 !important;
+}
+
+.login-toggle a {
+    color: #D2A050;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.login-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(249, 245, 238, 0.70);
+    z-index: 0;
+}
+
+.login-right .login-card {
+    position: relative;
+    z-index: 1;
 }
