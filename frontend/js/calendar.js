@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("cal-task-type").value = "";
       tasks = await loadTasks();
       renderCalendar(tasks);
+      loadSidebarUser();
     });
 });
 
@@ -131,6 +132,7 @@ function openTaskDetail(task) {
     closeModal("task-detail-modal");
     const updatedTasks = await loadTasks();
     renderCalendar(updatedTasks);
+    loadSidebarUser();
   };
 
   document.getElementById("detail-edit-btn").onclick = () => {

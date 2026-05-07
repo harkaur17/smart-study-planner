@@ -93,5 +93,11 @@ function loadSidebarUser() {
       .join("")
       .toUpperCase();
     document.getElementById("sidebar-avatar").textContent = initials;
+
+    // update streak if the element exists on this page
+    const streakEl = document.getElementById("sidebar-streak");
+    if (streakEl) {
+      streakEl.textContent = data.streakCount || 0;
+    }
   });
 }

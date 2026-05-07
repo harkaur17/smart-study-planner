@@ -142,10 +142,34 @@ public class TaskService {
             }
 
             // log if task completed
-            if (newStatus != null && newStatus.equalsIgnoreCase("DONE")) {
+            // if (newStatus != null && newStatus.equalsIgnoreCase("DONE")) {
+            //     activityLogRepository.save(new ActivityLog(
+            //             user, ActivityLog.ActionType.TASK_COMPLETED,
+            //             "Completed task: " + task.getTaskName(), 10));
+            // }
+
+            if(newStatus != null && newStatus.equalsIgnoreCase("DONE")){
                 activityLogRepository.save(new ActivityLog(
                         user, ActivityLog.ActionType.TASK_COMPLETED,
                         "Completed task: " + task.getTaskName(), 10));
+
+                //streak logic
+                LocalDate today = LocalDate.now();
+                LocalDate lastActiveDate = user.getLastActiveDate();
+                if(lastActiveDate == null){
+                    //first ever task completed
+                    user.setStreakCount(1);
+                } else if (lastActiveDate.equals(today.minusDays(1))){
+                    //keep streak going
+                    user.setStreakCount(user.getStreakCount() + 1);
+                } else if (lastActiveDate.equals(today)){
+                    //already completed a task today - do nothing
+                } else {
+                    //missed streak -> streak reset
+                    user.setStreakCount(1);
+                }
+                user.setLastActiveDate(today);
+                userRepository.save(user);
             }
 
             return toDTO(taskRepository.save(task));

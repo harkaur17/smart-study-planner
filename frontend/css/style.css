@@ -1008,3 +1008,19 @@ select:focus {
     position: relative;
     z-index: 1;
 }
+
+/* ── Sidebar Streak ── */
+.sidebar-streak {
+    padding: 10px 20px;
+    font-size: 12px;
+    color: rgba(245, 230, 208, 0.7);
+    border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sidebar-streak span {
+    color: #D2A050;
+    font-weight: 600;
+}
