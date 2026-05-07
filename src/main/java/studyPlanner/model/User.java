@@ -26,7 +26,7 @@ public class User {
     private String password;
 
     @Column
-    private String profilePicture;
+    private String profilePicture; //todo
 
     @Column
     private String school;
