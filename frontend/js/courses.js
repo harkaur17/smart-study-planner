@@ -31,6 +31,7 @@ saveBtn.addEventListener("click", function () {
   //read values from form fields
   const name = document.getElementById("course-name").value;
   const code = document.getElementById("course-code").value;
+  const color = document.getElementById("course-color").value;
 
   // Validate
   if (name.trim() === "") {
@@ -46,6 +47,7 @@ saveBtn.addEventListener("click", function () {
   const newCourse = {
     name: name,
     code: code,
+    color: color,
   };
 
   //Add course
@@ -61,6 +63,7 @@ saveBtn.addEventListener("click", function () {
     apiPut("/api/courses/" + editCourseId, {
       newName: name,
       newCode: code,
+      newColor: color,
     }).then(function (data) {
       courses = courses.map(function (course) {
         if (course.id === editCourseId) {
@@ -68,7 +71,7 @@ saveBtn.addEventListener("click", function () {
             id: editCourseId,
             name: name,
             code: code,
-            color: course.color,
+            color: color,
             semester: course.semester,
             year: course.year,
           };
@@ -126,6 +129,7 @@ function openEditCourse(courseId) {
   //pre-fill all form fields
   document.getElementById("course-name").value = course.name;
   document.getElementById("course-code").value = course.code;
+  document.getElementById("course-color").value = course.color || "#6B4C3B";
   editCourseId = courseId;
   modal.style.display = "flex";
 }

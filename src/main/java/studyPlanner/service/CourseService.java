@@ -46,13 +46,13 @@ public class CourseService {
     }
 
     // add a course
-    public Course addCourse(String name, String code) {
+    public Course addCourse(String name, String code, String color) {
         User user = getCurrentUser();
         Optional<Course> existing = courseRepository.findByCodeAndUser(code, user);
         if (existing.isPresent())
             return null;
         Course course = new Course(name, code, user);
-        course.setColor(randomColor());
+        course.setColor(color != null && !color.trim().isEmpty() ? color : DEFAULT_COLOR);
         Course saved = courseRepository.save(course);
         activityLogRepository.save(new ActivityLog(
                 user, ActivityLog.ActionType.COURSE_ADDED,
@@ -77,7 +77,7 @@ public class CourseService {
     }
 
     // edit a course
-    public Course editCourse(Long id, String newName, String newCode) {
+    public Course editCourse(Long id, String newName, String newCode, String newColor) {
         User user = getCurrentUser();
         Optional<Course> optional = courseRepository.findById(id);
         if (!optional.isPresent())
@@ -91,6 +91,8 @@ public class CourseService {
         if (newCode != null && !newCode.trim().isEmpty()) {
             course.setCode(newCode);
         }
+        if (newColor != null && !newColor.trim().isEmpty())
+            course.setColor(newColor);
         return courseRepository.save(course);
     }
 
