@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Profile - StudyHive</title>
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <a href="profile.html" class="active">Profile</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-streak">
+          🔥 <span id="sidebar-streak">0</span> day streak
+        </div>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
+
+      <div class="page-content">
+        <h1>Profile</h1>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <div class="profile-banner"></div>
+          <div class="profile-header">
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar" id="profile-avatar">?</div>
+              <div class="profile-streak-badge">
+                🔥 <span id="profile-streak">0</span> day streak
+              </div>
+            </div>
+            <div class="profile-name" id="profile-name"></div>
+            <div class="profile-username" id="profile-username"></div>
+            <div class="profile-email" id="profile-email"></div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="profile-stats-row">
+          <div class="profile-stat-box">
+            <div class="profile-stat-num" id="stat-courses">0</div>
+            <div class="profile-stat-label">Courses</div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-num" id="stat-tasks">0</div>
+            <div class="profile-stat-label">Tasks</div>
+          </div>
+          <div class="profile-stat-box">
+            <div class="profile-stat-num" id="stat-done">0</div>
+            <div class="profile-stat-label">Completed</div>
+          </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="profile-info-card">
+          <div class="profile-info-title">Academic Info</div>
+          <div class="profile-form-row">
+            <div class="form-group">
+              <label>School</label>
+              <input
+                type="text"
+                id="edit-school"
+                placeholder="e.g. York University"
+              />
+            </div>
+            <div class="form-group">
+              <label>Program</label>
+              <input
+                type="text"
+                id="edit-program"
+                placeholder="e.g. Software Engineering"
+              />
+            </div>
+          </div>
+          <div class="profile-form-row">
+            <div class="form-group">
+              <label>Year Level</label>
+              <select id="edit-year">
+                <option value="">Select year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Graduate">Graduate</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input
+                type="text"
+                id="edit-username"
+                placeholder="e.g. harkaur17"
+              />
+            </div>
+          </div>
+          <button id="save-profile-btn">Save changes</button>
+        </div>
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
+</html>

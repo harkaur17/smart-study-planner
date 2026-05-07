@@ -106,6 +106,7 @@ public class TaskService {
     }
 
     // edit a task
+    // edit a task
     public TaskDTO editTask(Long id, String newName, String newType, String newDueDate,
             String newStatus, String newPriority, List<String> newCourseCodes) {
         User user = getCurrentUser();
@@ -117,6 +118,9 @@ public class TaskService {
             return null;
 
         try {
+            // remember the old status before changing it
+            Task.Status oldStatus = task.getTaskStatus();
+
             if (newName != null && !newName.trim().isEmpty())
                 task.setName(newName);
             if (newType != null && !newType.trim().isEmpty())
@@ -141,14 +145,54 @@ public class TaskService {
                 }
             }
 
-            // log if task completed
-            if (newStatus != null && newStatus.equalsIgnoreCase("DONE")) {
+            // save the task first so the count below reflects the new state
+            taskRepository.save(task);
+
+            LocalDate today = LocalDate.now();
+            Task.Status newTaskStatus = newStatus != null
+                    ? Task.Status.valueOf(newStatus.toUpperCase())
+                    : oldStatus;
+
+            if (newTaskStatus == Task.Status.DONE && oldStatus != Task.Status.DONE) {
+                // task just became DONE — log and update streak
                 activityLogRepository.save(new ActivityLog(
                         user, ActivityLog.ActionType.TASK_COMPLETED,
                         "Completed task: " + task.getTaskName(), 10));
+
+                LocalDate lastActive = user.getLastActiveDate();
+                if (lastActive == null) {
+                    user.setStreakCount(1);
+                } else if (lastActive.equals(today.minusDays(1))) {
+                    user.setStreakCount(user.getStreakCount() + 1);
+                } else if (lastActive.equals(today)) {
+                    // already counted today, do nothing
+                } else {
+                    user.setStreakCount(1);
+                }
+                user.setLastActiveDate(today);
+                userRepository.save(user);
+
+            } else if (newTaskStatus != Task.Status.DONE && oldStatus == Task.Status.DONE) {
+                // task was un-done — check if any DONE tasks remain
+                long remainingDone = taskRepository.countDoneTasksByUser(user);
+
+                if (remainingDone == 0 && today.equals(user.getLastActiveDate())) {
+                    // no done tasks left today — roll back streak
+                    int newStreak = user.getStreakCount() - 1;
+                    user.setStreakCount(Math.max(0, newStreak));
+
+                    // if streak is now 0, clear the lastActiveDate
+                    if (user.getStreakCount() == 0) {
+                        user.setLastActiveDate(null);
+                    } else {
+                        // set lastActiveDate back to yesterday
+                        user.setLastActiveDate(today.minusDays(1));
+                    }
+                    userRepository.save(user);
+                }
             }
 
-            return toDTO(taskRepository.save(task));
+            return toDTO(task);
         } catch (IllegalArgumentException e) {
             return null;
         }
