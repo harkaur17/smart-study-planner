@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import studyPlanner.model.User;
 import studyPlanner.repository.UserRepository;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -13,7 +14,10 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    static class UpdateProfileRequest{
+    @Autowired
+    private studyPlanner.service.BadgeService badgeService;
+
+    static class UpdateProfileRequest {
         public String school;
         public String program;
         public String yearLevel;
@@ -29,17 +33,28 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<User> updateProfile(@RequestBody UpdateProfileRequest request){
+    public ResponseEntity<User> updateProfile(@RequestBody UpdateProfileRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
-        .orElseThrow(()-> new RuntimeException("User not found"));
-        if(request.school != null) user.setSchool(request.school);
-        if(request.program != null) user.setProgram(request.program);
-        if(request.yearLevel != null) user.setYearLevel(request.yearLevel);
-        if(request.username != null && !request.username.trim().isEmpty()){
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (request.school != null)
+            user.setSchool(request.school);
+        if (request.program != null)
+            user.setProgram(request.program);
+        if (request.yearLevel != null)
+            user.setYearLevel(request.yearLevel);
+        if (request.username != null && !request.username.trim().isEmpty()) {
             user.setUsername(request.username);
         }
         userRepository.save(user);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/badges")
+    public ResponseEntity<List<studyPlanner.model.Badge>> getBadges() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.ok(badgeService.getBadges(user));
     }
 }

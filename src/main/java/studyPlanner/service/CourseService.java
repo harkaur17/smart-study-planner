@@ -26,6 +26,9 @@ public class CourseService {
     @Autowired
     private ActivityLogRepository activityLogRepository;
 
+    @Autowired
+    private BadgeService badgeService;
+
     private static final String DEFAULT_COLOR = "#6B4C3B";
 
     private String randomColor() {
@@ -53,10 +56,13 @@ public class CourseService {
             return null;
         Course course = new Course(name, code, user);
         course.setColor(color != null && !color.trim().isEmpty() ? color : DEFAULT_COLOR);
+
         Course saved = courseRepository.save(course);
+        user.setXpTotal(user.getXpTotal() + 5);
         activityLogRepository.save(new ActivityLog(
                 user, ActivityLog.ActionType.COURSE_ADDED,
                 "Added course " + code, 5));
+        badgeService.checkAndAwardBadges(user);
         return saved;
     }
 

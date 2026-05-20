@@ -1145,3 +1145,96 @@ select:focus {
     gap: 16px;
     margin-bottom: 16px;
 }
+
+/* ── XP & Level ── */
+.profile-xp-card {
+    background: white;
+    border-radius: 12px;
+    border: 0.5px solid #E8DDD0;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+}
+
+.profile-xp-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.profile-level-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1C1410;
+    margin-bottom: 2px;
+}
+
+.profile-xp-label {
+    font-size: 13px;
+    color: #8B7355;
+}
+
+.profile-xp-label span {
+    color: #D2A050;
+    font-weight: 600;
+}
+
+.profile-xp-next {
+    font-size: 12px;
+    color: #8B7355;
+    padding-top: 4px;
+}
+
+.profile-xp-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #F0E8DF;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.profile-xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #D2A050, #E8B860);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+}
+
+/* ── Badges ── */
+.profile-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.badge-item {
+    background: #F9F5EE;
+    border: 0.5px solid #E8DDD0;
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-item.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+
+.badge-emoji {
+    font-size: 28px;
+}
+
+.badge-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: #1C1410;
+}
+
+.badge-earned {
+    font-size: 10px;
+    color: #8B7355;
+}
