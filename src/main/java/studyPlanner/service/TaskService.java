@@ -33,6 +33,9 @@ public class TaskService {
     @Autowired
     private ActivityLogRepository activityLogRepository;
 
+    @Autowired
+    private BadgeService badgeService;
+
     // get current logged in user from JWT token
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -78,6 +81,7 @@ public class TaskService {
             }
 
             Task saved = taskRepository.save(task);
+            user.setXpTotal(user.getXpTotal() + 5);
             activityLogRepository.save(new ActivityLog(
                     user, ActivityLog.ActionType.TASK_ADDED,
                     "Added task: " + name, 5));
@@ -159,6 +163,10 @@ public class TaskService {
                         user, ActivityLog.ActionType.TASK_COMPLETED,
                         "Completed task: " + task.getTaskName(), 10));
 
+                //accumulate xp
+                user.setXpTotal(user.getXpTotal() + 10);
+
+                //streak logic
                 LocalDate lastActive = user.getLastActiveDate();
                 if (lastActive == null) {
                     user.setStreakCount(1);
@@ -171,6 +179,9 @@ public class TaskService {
                 }
                 user.setLastActiveDate(today);
                 userRepository.save(user);
+
+                //check badges
+                badgeService.checkAndAwardBadges(user);
 
             } else if (newTaskStatus != Task.Status.DONE && oldStatus == Task.Status.DONE) {
                 // task was un-done — check if any DONE tasks remain

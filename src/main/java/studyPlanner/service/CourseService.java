@@ -26,6 +26,9 @@ public class CourseService {
     @Autowired
     private ActivityLogRepository activityLogRepository;
 
+    @Autowired
+    private BadgeService badgeService;
+
     private static final String DEFAULT_COLOR = "#6B4C3B";
 
     private String randomColor() {
@@ -46,17 +49,20 @@ public class CourseService {
     }
 
     // add a course
-    public Course addCourse(String name, String code) {
+    public Course addCourse(String name, String code, String color) {
         User user = getCurrentUser();
         Optional<Course> existing = courseRepository.findByCodeAndUser(code, user);
         if (existing.isPresent())
             return null;
         Course course = new Course(name, code, user);
-        course.setColor(randomColor());
+        course.setColor(color != null && !color.trim().isEmpty() ? color : DEFAULT_COLOR);
+
         Course saved = courseRepository.save(course);
+        user.setXpTotal(user.getXpTotal() + 5);
         activityLogRepository.save(new ActivityLog(
                 user, ActivityLog.ActionType.COURSE_ADDED,
                 "Added course " + code, 5));
+        badgeService.checkAndAwardBadges(user);
         return saved;
     }
 
@@ -77,7 +83,7 @@ public class CourseService {
     }
 
     // edit a course
-    public Course editCourse(Long id, String newName, String newCode) {
+    public Course editCourse(Long id, String newName, String newCode, String newColor) {
         User user = getCurrentUser();
         Optional<Course> optional = courseRepository.findById(id);
         if (!optional.isPresent())
@@ -91,6 +97,8 @@ public class CourseService {
         if (newCode != null && !newCode.trim().isEmpty()) {
             course.setCode(newCode);
         }
+        if (newColor != null && !newColor.trim().isEmpty())
+            course.setColor(newColor);
         return courseRepository.save(course);
     }
 

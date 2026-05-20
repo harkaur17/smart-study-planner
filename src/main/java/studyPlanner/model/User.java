@@ -44,6 +44,9 @@ public class User {
     private LocalDate lastActiveDate;
 
     @Column(nullable = false)
+    private int xpTotal = 0;
+
+    @Column(nullable = false)
     private boolean isPublic = true;
 
     // Getters
@@ -89,6 +92,10 @@ public class User {
 
     public LocalDate getLastActiveDate() {
         return lastActiveDate;
+    }
+
+    public int getXpTotal(){
+        return xpTotal;
     }
 
     public boolean isPublic() {
@@ -138,6 +145,10 @@ public class User {
 
     public void setLastActiveDate(LocalDate date) {
         this.lastActiveDate = date;
+    }
+
+    public void setXpTotal(int xpTotal){
+        this.xpTotal = xpTotal;
     }
 
     public void setPublic(boolean isPublic) {
