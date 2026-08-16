@@ -46,73 +46,125 @@
             <h1 id="course-code" style="color:#fff; font-size:28px; font-weight:600; margin:8px 0 0;"></h1>
           </div>
         </div>
+<!-- Course Info -->
+<div style="padding:32px;">
+  <p id="course-name" style="font-size:18px; color:#1C1410; font-weight:500; margin:0 0 4px;"></p>
+  <p id="course-meta" style="font-size:13px; color:#8B7355; margin:0 0 24px;"></p>
 
-        <!-- Course Info -->
-        <div style="padding:32px;">
-          <p id="course-name" style="font-size:18px; color:#1C1410; font-weight:500; margin:0 0 4px;"></p>
-          <p id="course-meta" style="font-size:13px; color:#8B7355; margin:0 0 24px;"></p>
+  <!-- Tabs -->
+  <div style="display:flex; gap:0; margin-bottom:24px; border-bottom:1px solid #E8DDD0;">
+    <div id="tab-tasks" onclick="switchTab('tasks')" style="padding:10px 20px; font-size:13px; color:#1C1410; font-weight:500; cursor:pointer; border-bottom:2px solid #D2A050; margin-bottom:-1px;">Tasks</div>
+    <div id="tab-grades" onclick="switchTab('grades')" style="padding:10px 20px; font-size:13px; color:#8B7355; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;">Grades</div>
+  </div>
 
-          <!-- Progress Bar -->
-          <div style="margin-bottom:32px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-              <span style="font-size:13px; color:#1C1410; font-weight:500;">Progress</span>
-              <span style="font-size:13px; color:#8B7355;" id="progress-text">0/0 tasks done</span>
-            </div>
-            <div style="background:#E8DDD0; border-radius:99px; height:8px;">
-              <div id="progress-bar" style="background:#6B4C3B; height:8px; border-radius:99px; width:0%; transition:width 0.3s ease;"></div>
-            </div>
-          </div>
+  <!-- ===== TASKS TAB ===== -->
+  <div id="tasks-tab-content">
+    <!-- Progress Bar -->
+    <div style="margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-size:13px; color:#1C1410; font-weight:500;">Progress</span>
+        <span style="font-size:13px; color:#8B7355;" id="progress-text">0/0 tasks done</span>
+      </div>
+      <div style="background:#E8DDD0; border-radius:99px; height:8px;">
+        <div id="progress-bar" style="background:#6B4C3B; height:8px; border-radius:99px; width:0%; transition:width 0.3s ease;"></div>
+      </div>
+    </div>
 
-          <!-- Tasks Header -->
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-            <h2 style="font-size:16px; font-weight:500; color:#1C1410; margin:0;">Tasks</h2>
-            <button onclick="openAddTask()" style="background:#1C1410; color:#F9F5EE; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer; font-family:inherit;">+ Add Task</button>
-          </div>
+    <!-- Tasks Header -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="font-size:16px; font-weight:500; color:#1C1410; margin:0;">Tasks</h2>
+      <button onclick="openAddTask()" style="background:#1C1410; color:#F9F5EE; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer; font-family:inherit;">+ Add Task</button>
+    </div>
 
-          <!-- Task List -->
-          <div id="course-task-list"></div>
-        </div>
+    <!-- Task List -->
+    <div id="course-task-list"></div>
+  </div>
 
-        <!-- Add Task Modal -->
-        <div class="modal" id="task-modal">
-          <div class="modal-content">
-            <form id="add-task-form">
-              <div class="form-group">
-                <label>Task Name</label>
-                <input type="text" id="task-name" placeholder="Enter task name"/>
-              </div>
-              <div class="form-group">
-                <label>Task Type</label>
-                <input type="text" id="task-type" placeholder="e.g. Assignment, Quiz"/>
-              </div>
-              <div class="form-group">
-                <label>Due Date</label>
-                <input type="date" id="due-date"/>
-              </div>
-              <div class="form-group">
-                <label>Status</label>
-                <select id="task-status">
-                  <option value="TODO">TODO</option>
-                  <option value="IN_PROGRESS">IN PROGRESS</option>
-                  <option value="DONE">DONE</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Priority</label>
-                <select id="task-priority">
-                  <option value="HIGH">HIGH</option>
-                  <option value="MEDIUM">MEDIUM</option>
-                  <option value="LOW">LOW</option>
-                </select>
-              </div>
-            </form>
-            <div class="button-group">
-              <button id="cancel-task">Cancel</button>
-              <button id="save-task">Save</button>
-            </div>
-          </div>
-        </div>
+  <!-- ===== GRADES TAB ===== -->
+  <div id="grades-tab-content" style="display:none;">
 
+    <!-- Summary cards -->
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-bottom:16px;">
+  <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; padding:14px 16px; text-align:center;">
+    <div id="current-grade-num" style="font-size:22px; font-weight:600; color:#3B6B4C;">—</div>
+    <div style="font-size:11px; color:#8B7355; margin-top:2px;">Current grade</div>
+  </div>
+  <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; padding:14px 16px; text-align:center;">
+    <div id="letter-grade-num" style="font-size:22px; font-weight:600; color:#D2A050;">—</div>
+    <div style="font-size:11px; color:#8B7355; margin-top:2px;">Letter grade</div>
+  </div>
+  <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; padding:14px 16px; text-align:center;">
+    <div id="projected-grade-num" style="font-size:22px; font-weight:600; font-style:italic; color:#378ADD;">—</div>
+    <div style="font-size:11px; color:#8B7355; margin-top:2px;">Projected grade</div>
+  </div>
+  <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; padding:14px 16px; text-align:center;">
+    <div id="weight-remaining-num" style="font-size:22px; font-weight:600; color:#1C1410;">—</div>
+    <div style="font-size:11px; color:#8B7355; margin-top:2px;">Weight remaining</div>
+  </div>
+</div>
+
+    <!-- Target grade -->
+    <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; padding:12px 16px; margin-bottom:16px; display:flex; align-items:center; gap:12px;">
+      <div style="font-size:13px; color:#6B4C3B; font-weight:500; flex-shrink:0;">Target grade</div>
+      <input id="target-grade-input" type="number" placeholder="85" style="border:1px solid #E8DDD0; border-radius:6px; padding:5px 10px; font-size:13px; width:70px; color:#1C1410;"/>
+      <span style="font-size:13px; color:#8B7355;">%</span>
+      <div id="target-result" style="font-size:12px; color:#3B6B4C; background:rgba(59,107,76,0.08); padding:4px 10px; border-radius:20px; margin-left:auto;"></div>
+    </div>
+
+    <!-- Component table -->
+    <div style="background:#fff; border:0.5px solid #E8DDD0; border-radius:10px; overflow:hidden;">
+      <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 70px; padding:10px 16px; background:#F9F5EE; border-bottom:0.5px solid #E8DDD0;">
+        <div style="font-size:11px; font-weight:500; color:#8B7355; text-transform:uppercase; letter-spacing:0.04em;">Component</div>
+        <div style="font-size:11px; font-weight:500; color:#8B7355; text-transform:uppercase; letter-spacing:0.04em;">Weight</div>
+        <div style="font-size:11px; font-weight:500; color:#8B7355; text-transform:uppercase; letter-spacing:0.04em;">Grade</div>
+        <div style="font-size:11px; font-weight:500; color:#8B7355; text-transform:uppercase; letter-spacing:0.04em;">Weighted</div>
+        <div></div>
+      </div>
+      <div id="grades-table-body"></div>
+      <div id="grades-add-row"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal" id="task-modal">
+  <div class="modal-content">
+    <form id="add-task-form">
+      <div class="form-group">
+        <label>Task Name</label>
+        <input type="text" id="task-name" placeholder="Enter task name"/>
+      </div>
+      <div class="form-group">
+        <label>Task Type</label>
+        <input type="text" id="task-type" placeholder="e.g. Assignment, Quiz"/>
+      </div>
+      <div class="form-group">
+        <label>Due Date</label>
+        <input type="date" id="due-date"/>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="task-status">
+          <option value="TODO">TODO</option>
+          <option value="IN_PROGRESS">IN PROGRESS</option>
+          <option value="DONE">DONE</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="task-priority">
+          <option value="HIGH">HIGH</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="LOW">LOW</option>
+        </select>
+      </div>
+    </form>
+    <div class="button-group">
+      <button id="cancel-task">Cancel</button>
+      <button id="save-task">Save</button>
+    </div>
+  </div>
+</div>
       </div>
     </div>
     <script src="js/api.js"></script>
