@@ -18,6 +18,7 @@ public class GradeController {
         public String name;
         public Double weight;
         public Double grade;
+        public Double expectedGrade;
     }
 
     @GetMapping
@@ -32,7 +33,7 @@ public class GradeController {
     public ResponseEntity<GradeItem> addGradeItem(@PathVariable Long courseId,
             @RequestBody GradeItemRequest request) {
         GradeItem item = gradeItemService.addGradeItem(courseId, request.name,
-                request.weight, request.grade);
+                request.weight, request.grade, request.expectedGrade);
         if (item == null)
             return ResponseEntity.badRequest().build();
         return ResponseEntity.status(201).body(item);
@@ -43,7 +44,7 @@ public class GradeController {
             @PathVariable Long itemId,
             @RequestBody GradeItemRequest request) {
         GradeItem item = gradeItemService.editGradeItem(itemId, request.name,
-                request.weight, request.grade);
+                request.weight, request.grade, request.expectedGrade);
         if (item == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(item);

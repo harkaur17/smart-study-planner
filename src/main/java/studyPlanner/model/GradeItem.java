@@ -27,12 +27,16 @@ public class GradeItem {
     @Column
     private Double grade; 
 
+    @Column
+    private Double expectedGrade;
+
     public GradeItem() {
     }  
 
     public GradeItem(Course course, User user, String name, double weight, Double grade){
         this.course = course;
         this.user = user;
+        this.name = name;
         this.weight = weight;
         this.grade = grade;
     }
@@ -43,6 +47,7 @@ public class GradeItem {
     public String getName() { return name; }
     public double getWeight() { return weight; }
     public Double getGrade() { return grade; }
+    public Double getExpectedGrade() { return expectedGrade; }
 
     public void setId(Long id) { this.id = id; }
     public void setCourse(Course course) { this.course = course; }
@@ -50,6 +55,5 @@ public class GradeItem {
     public void setName(String name) { this.name = name; }
     public void setWeight(double weight) { this.weight = weight; }
     public void setGrade(Double grade) { this.grade = grade; }
-
-
+    public void setExpectedGrade(Double expectedGrade) { this.expectedGrade = expectedGrade; }
 }
