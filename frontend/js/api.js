@@ -23,6 +23,14 @@ function requireAuth() {
   }
 }
 
+// Parse a response body as JSON, tolerating empty bodies (e.g. from
+// ResponseEntity.badRequest().build() / .notFound().build())
+function parseJsonResponse(response) {
+  return response.text().then(function (text) {
+    return text ? JSON.parse(text) : null;
+  });
+}
+
 // GET request with token
 function apiGet(endpoint) {
   return fetch(BASE_URL + endpoint, {
@@ -35,7 +43,7 @@ function apiGet(endpoint) {
         logout();
       }
     }
-    return response.json();
+    return parseJsonResponse(response);
   });
 }
 
@@ -49,9 +57,7 @@ function apiPost(endpoint, data) {
     method: "POST",
     headers: headers,
     body: JSON.stringify(data),
-  }).then(function (response) {
-    return response.json();
-  });
+  }).then(parseJsonResponse);
 }
 
 // PUT request with token
@@ -63,9 +69,7 @@ function apiPut(endpoint, data) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then(function (response) {
-    return response.json();
-  });
+  }).then(parseJsonResponse);
 }
 
 // DELETE request with token
