@@ -52,11 +52,22 @@ public class StudySession {
     @Column(nullable = false)
     private int completedSessions = 0;
 
+    @Column
+    private Long taskId;
+
+    @Column
+    private String taskName;
+
+    @ElementCollection
+    @CollectionTable(name = "session_course_blocks", joinColumns = @JoinColumn(name = "session_id"))
+    private List<CourseBlock> courseBlocks = new ArrayList<>();
+
     public StudySession() {
     }
 
     public StudySession(User user, List<Course> courses, Mode mode, int plannedSessions,
-            int focusMinutes, int breakMinutes, boolean skipBreaks) {
+            int focusMinutes, int breakMinutes, boolean skipBreaks, Long taskId, String taskName,
+            List<CourseBlock> courseBlocks) {
         this.user = user;
         this.courses = courses;
         this.mode = mode;
@@ -64,6 +75,9 @@ public class StudySession {
         this.focusMinutes = focusMinutes;
         this.breakMinutes = breakMinutes;
         this.skipBreaks = skipBreaks;
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.courseBlocks = courseBlocks;
         this.startedAt = LocalDateTime.now();
     }
 
@@ -112,6 +126,18 @@ public class StudySession {
         return completedSessions;
     }
 
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public List<CourseBlock> getCourseBlocks() {
+        return courseBlocks;
+    }
+
     // Setters
     public void setId(Long id) {
         this.id = id;
@@ -155,5 +181,17 @@ public class StudySession {
 
     public void setCompletedSessions(int completedSessions) {
         this.completedSessions = completedSessions;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setCourseBlocks(List<CourseBlock> courseBlocks) {
+        this.courseBlocks = courseBlocks;
     }
 }

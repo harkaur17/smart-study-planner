@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <title>Study Session - StudyHive</title>
+  </head>
+  <body>
+    <div class="app-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <p>StudyHive</p>
+          <span id="sidebar-username">Loading...</span>
+        </div>
+        <nav class="sidebar-nav">
+          <p class="sidebar-section-label">Personal</p>
+          <a href="index.html">Dashboard</a>
+          <a href="courses.html">Courses</a>
+          <a href="tasks.html">Tasks</a>
+          <a href="calendar.html">Calendar</a>
+          <a href="pomodoro.html" class="active">Study</a>
+          <a href="profile.html">Profile</a>
+          <p class="sidebar-section-label">Community</p>
+          <a href="feed.html">Feed</a>
+          <a href="groups.html">Groups</a>
+          <a href="leaderboard.html">Leaderboard</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebar-avatar">?</div>
+            <span class="sidebar-username" id="sidebar-name">User</span>
+          </div>
+          <button class="sidebar-logout" onclick="logout()">Logout</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="page-content study-page">
+
+        <!-- Setup screen -->
+        <div id="setup-screen" class="study-hero">
+          <div class="study-hero-icon">🌿</div>
+          <h1 class="study-hero-title">Ready to focus?</h1>
+          <p class="study-hero-subtitle">Pick your courses, choose a rhythm, and settle in.</p>
+
+          <div id="interleave-banner" class="study-interleave-banner" style="display:none;"></div>
+
+          <div class="study-setup-card">
+            <div class="study-setup-section">
+              <div class="study-setup-label">Courses</div>
+              <div id="course-picker" class="study-course-picker"></div>
+            </div>
+
+            <div class="study-setup-section">
+              <div class="study-setup-label">Focusing on (optional)</div>
+              <select id="task-picker" class="study-task-select">
+                <option value="">No specific task</option>
+              </select>
+            </div>
+
+            <div class="study-setup-section">
+              <div class="study-setup-label">Mode</div>
+              <div class="study-mode-grid">
+                <button id="mode-classic" class="study-mode-card" onclick="selectMode('CLASSIC')">
+                  <span class="study-mode-name">Classic</span>
+                  <span class="study-mode-detail">25 min focus · 5 min break</span>
+                </button>
+                <button id="mode-flowtime" class="study-mode-card" onclick="selectMode('FLOWTIME')">
+                  <span class="study-mode-name">Flowtime</span>
+                  <span class="study-mode-detail">52 min focus · 17 min break</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="study-setup-row">
+              <div id="single-session-section" class="study-setup-section">
+                <div class="study-setup-label">Sessions</div>
+                <div class="study-stepper">
+                  <button onclick="changeSessionCount(-1)">−</button>
+                  <span id="session-count-display">4</span>
+                  <button onclick="changeSessionCount(1)">+</button>
+                </div>
+                <div id="total-minutes-display" class="study-setup-hint"></div>
+              </div>
+              <div class="study-setup-section">
+                <div class="study-setup-label">Skip breaks</div>
+                <div id="skip-breaks-toggle" class="study-toggle" onclick="toggleSkipBreaks()">
+                  <div id="skip-breaks-dot" class="study-toggle-dot"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="multi-session-section" class="study-setup-section" style="display:none;">
+              <div class="study-setup-label">Split your sessions</div>
+              <div id="multi-session-list"></div>
+              <div id="multi-session-total" class="study-setup-hint"></div>
+            </div>
+
+            <div class="study-setup-section">
+              <div class="study-setup-label">Mix in other courses</div>
+              <div id="interleave-toggle" class="study-toggle" onclick="toggleInterleave()">
+                <div id="interleave-toggle-dot" class="study-toggle-dot"></div>
+              </div>
+            </div>
+
+            <button class="study-start-btn" onclick="startSession()">Start session</button>
+          </div>
+        </div>
+
+        <!-- Session history -->
+        <div id="history-section" class="study-history">
+          <div class="study-stats-row">
+            <div class="profile-stat-box">
+              <div class="profile-stat-num" id="history-total-focus">0m</div>
+              <div class="profile-stat-label">Total focus time</div>
+            </div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-num" id="history-sessions-completed">0</div>
+              <div class="profile-stat-label">Sessions this week</div>
+            </div>
+          </div>
+
+          <div class="study-history-label">Recent sessions</div>
+          <div id="history-list" class="study-history-list"></div>
+        </div>
+
+        <!-- Running timer screen -->
+        <div id="timer-screen" class="study-timer-wrap" style="display:none;">
+          <div id="timer-card" class="study-timer-card phase-focus">
+            <div class="study-ring-wrap">
+              <svg viewBox="0 0 200 200" class="study-ring-svg">
+                <circle cx="100" cy="100" r="90" class="study-ring-track"></circle>
+                <circle cx="100" cy="100" r="90" class="study-ring-progress" id="ring-progress"
+                  stroke-dasharray="565.48" stroke-dashoffset="565.48"></circle>
+              </svg>
+              <div class="study-ring-center">
+                <div id="phase-label" class="study-phase-label">Focus</div>
+                <div id="timer-display" class="study-timer-display">25:00</div>
+                <div id="timer-subtext" class="study-timer-subtext"></div>
+              </div>
+            </div>
+
+            <div id="timer-task" class="study-timer-task" style="display:none;"></div>
+            <div id="timer-interleave" class="study-timer-task" style="display:none;"></div>
+
+            <div id="session-dots" class="study-session-dots"></div>
+
+            <div id="timer-actions" class="study-timer-actions">
+              <button id="pause-btn" onclick="togglePause()" class="study-pause-btn">Pause</button>
+              <button onclick="skipPhase()" class="study-skip-btn">Skip</button>
+            </div>
+
+            <div id="complete-actions" style="display:none; margin-bottom:12px;">
+              <button id="mark-task-done-btn" onclick="markTaskDone()" class="study-pause-btn"></button>
+            </div>
+
+            <button id="end-session-btn" onclick="endSession()" class="study-end-btn">End session</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/timer-engine.js"></script>
+    <script src="js/pomodoro.js"></script>
+  </body>
+</html>

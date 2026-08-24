@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import studyPlanner.model.Course;
+import studyPlanner.model.CourseBlock;
 import studyPlanner.model.StudySession;
+import studyPlanner.model.Task;
 import studyPlanner.model.User;
 import studyPlanner.repository.CourseRepository;
 import studyPlanner.repository.StudySessionRepository;
+import studyPlanner.repository.TaskRepository;
 import studyPlanner.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,9 @@ public class StudySessionService {
     private CourseRepository courseRepository;
 
     @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     private User getCurrentUser() {
@@ -34,8 +40,9 @@ public class StudySessionService {
     }
 
     // start a new session
-    public StudySession startSession(List<Long> courseIds, StudySession.Mode mode,
-            int plannedSessions, int focusMinutes, int breakMinutes, boolean skipBreaks) {
+    public StudySession startSession(List<Long> courseIds, Long taskId, List<Long> blockCourseIds,
+            List<Integer> blockCounts, StudySession.Mode mode, int plannedSessions, int focusMinutes,
+            int breakMinutes, boolean skipBreaks) {
         User user = getCurrentUser();
 
         // don't allow starting a new session while one is already active
@@ -52,8 +59,35 @@ public class StudySessionService {
             }
         }
 
-        StudySession session = new StudySession(user, courses, mode, plannedSessions,
-                focusMinutes, breakMinutes, skipBreaks);
+        Long resolvedTaskId = null;
+        String resolvedTaskName = null;
+        if (taskId != null) {
+            Optional<Task> task = taskRepository.findById(taskId);
+            if (task.isPresent() && task.get().getUser().getId().equals(user.getId())) {
+                resolvedTaskId = task.get().getId();
+                resolvedTaskName = task.get().getTaskName();
+            }
+        }
+
+        List<CourseBlock> courseBlocks = new ArrayList<>();
+        int resolvedPlannedSessions = plannedSessions;
+        if (blockCourseIds != null && !blockCourseIds.isEmpty()) {
+            int total = 0;
+            for (int i = 0; i < blockCourseIds.size(); i++) {
+                Long blockCourseId = blockCourseIds.get(i);
+                Integer count = blockCounts.get(i);
+                if (blockCourseId == null || count == null || count < 1) continue;
+                Optional<Course> course = courseRepository.findById(blockCourseId);
+                if (course.isPresent() && course.get().getUser().getId().equals(user.getId())) {
+                    courseBlocks.add(new CourseBlock(course.get().getId(), course.get().getCode(), count));
+                    total += count;
+                }
+            }
+            if (!courseBlocks.isEmpty()) resolvedPlannedSessions = total;
+        }
+
+        StudySession session = new StudySession(user, courses, mode, resolvedPlannedSessions,
+                focusMinutes, breakMinutes, skipBreaks, resolvedTaskId, resolvedTaskName, courseBlocks);
         return studySessionRepository.save(session);
     }
 
