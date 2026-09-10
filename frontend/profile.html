@@ -107,6 +107,29 @@
           </div>
         </div>
 
+        <!-- Study Buddies -->
+        <div class="profile-info-card" style="margin-bottom: 20px">
+          <div class="profile-info-title">Study Buddies</div>
+
+          <div class="buddy-search-row">
+            <input type="text" id="buddy-search-input" placeholder="Search by username..." />
+          </div>
+          <div id="buddy-search-results"></div>
+
+          <div class="buddy-tabs">
+            <button class="buddy-tab active" id="tab-following" onclick="switchBuddyTab('following')">
+              Following (<span id="following-count">0</span>)
+            </button>
+            <button class="buddy-tab" id="tab-followers" onclick="switchBuddyTab('followers')">
+              Followers (<span id="followers-count">0</span>)
+            </button>
+            <button class="buddy-tab" id="tab-requests" onclick="switchBuddyTab('requests')">
+              Requests (<span id="requests-count">0</span>)
+            </button>
+          </div>
+          <div id="buddy-list"></div>
+        </div>
+
         <!-- Edit Form -->
         <div class="profile-info-card">
           <div class="profile-info-title">Academic Info</div>
@@ -147,6 +170,14 @@
                 id="edit-username"
                 placeholder="e.g. harkaur17"
               />
+            </div>
+          </div>
+          <div class="profile-form-row" style="align-items:center;">
+            <div class="form-group">
+              <label>Private account</label>
+              <div id="private-toggle" class="study-toggle" onclick="togglePrivate()">
+                <div id="private-toggle-dot" class="study-toggle-dot"></div>
+              </div>
             </div>
           </div>
           <button id="save-profile-btn">Save changes</button>

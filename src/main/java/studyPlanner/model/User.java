@@ -3,6 +3,7 @@ package studyPlanner.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "users")
@@ -47,7 +48,7 @@ public class User {
     private int xpTotal = 0;
 
     @Column(nullable = false)
-    private boolean isPublic = true;
+    private boolean isPublic = false;
 
     // Getters
     public Long getId() {
@@ -98,6 +99,7 @@ public class User {
         return xpTotal;
     }
 
+    @JsonProperty("isPublic")
     public boolean isPublic() {
         return isPublic;
     }
