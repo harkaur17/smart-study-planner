@@ -49,6 +49,11 @@
 
           <div id="interleave-banner" class="study-interleave-banner" style="display:none;"></div>
 
+          <div id="buddies-active-section" class="study-interleave-banner" style="display:none;">
+            <div class="study-interleave-text" style="margin-bottom:10px;">🟢 Buddies studying now</div>
+            <div id="buddies-active-list"></div>
+          </div>
+
           <div class="study-setup-card">
             <div class="study-setup-section">
               <div class="study-setup-label">Courses</div>
@@ -107,6 +112,13 @@
               </div>
             </div>
 
+            <div class="study-setup-section">
+              <div class="study-setup-label">Share with study buddies</div>
+              <div id="share-toggle" class="study-toggle" onclick="toggleShare()">
+                <div id="share-toggle-dot" class="study-toggle-dot"></div>
+              </div>
+            </div>
+
             <button class="study-start-btn" onclick="startSession()">Start session</button>
           </div>
         </div>
@@ -146,6 +158,10 @@
 
             <div id="timer-task" class="study-timer-task" style="display:none;"></div>
             <div id="timer-interleave" class="study-timer-task" style="display:none;"></div>
+
+            <div id="join-request-banner" style="display:none; width:100%; text-align:left; margin-bottom:14px;">
+              <div id="join-request-list"></div>
+            </div>
 
             <div id="session-dots" class="study-session-dots"></div>
 
