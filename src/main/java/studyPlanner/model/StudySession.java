@@ -62,12 +62,15 @@ public class StudySession {
     @CollectionTable(name = "session_course_blocks", joinColumns = @JoinColumn(name = "session_id"))
     private List<CourseBlock> courseBlocks = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean shareWithBuddies = false;
+
     public StudySession() {
     }
 
     public StudySession(User user, List<Course> courses, Mode mode, int plannedSessions,
             int focusMinutes, int breakMinutes, boolean skipBreaks, Long taskId, String taskName,
-            List<CourseBlock> courseBlocks) {
+            List<CourseBlock> courseBlocks, boolean shareWithBuddies) {
         this.user = user;
         this.courses = courses;
         this.mode = mode;
@@ -78,6 +81,7 @@ public class StudySession {
         this.taskId = taskId;
         this.taskName = taskName;
         this.courseBlocks = courseBlocks;
+        this.shareWithBuddies = shareWithBuddies;
         this.startedAt = LocalDateTime.now();
     }
 
@@ -138,6 +142,10 @@ public class StudySession {
         return courseBlocks;
     }
 
+    public boolean isShareWithBuddies() {
+        return shareWithBuddies;
+    }
+
     // Setters
     public void setId(Long id) {
         this.id = id;
@@ -193,5 +201,9 @@ public class StudySession {
 
     public void setCourseBlocks(List<CourseBlock> courseBlocks) {
         this.courseBlocks = courseBlocks;
+    }
+
+    public void setShareWithBuddies(boolean shareWithBuddies) {
+        this.shareWithBuddies = shareWithBuddies;
     }
 }

@@ -1,6 +1,6 @@
 # StudyHive 🐝
 
-A full-stack academic productivity app built for university students. StudyHive helps you manage courses, track tasks, monitor grades, maintain study streaks, and earn achievements — all in one warm, focused space.
+A full-stack academic productivity app built for university students. StudyHive helps you manage courses, track tasks, monitor grades, run focused study sessions, maintain study streaks, and earn achievements — all in one warm, focused space.
 
 > Built with Java Spring Boot, PostgreSQL, and Vanilla JavaScript. No frameworks.
 
@@ -37,11 +37,27 @@ A full-stack academic productivity app built for university students. StudyHive 
 - Add, edit, delete tasks with priority, status, due date, and course links
 - Filter and view all tasks across courses
 
+### Grade Tracker
+- Weighted grade components per course — name, weight, and grade
+- Current grade divides only by *graded* weight, so an ungraded final doesn't artificially deflate your grade mid-semester
+- Optional expected/projected grade per component — a personal guess, shown distinct from confirmed grades, factored only into a separate "Projected grade" card, never the real "Current grade"
+- Target grade calculator — reverse weighted-average math tells you what average you need on remaining components to hit a goal
+- Inline-editable table rows — click to edit in place, no modal
+
 ### Calendar
 - Monthly calendar view with tasks rendered by due date
 - Color coded chips by priority and status
 - Click a task chip to view/edit/delete inline
 - Hover a day to add a task with that date pre-filled
+
+### Study Sessions (Pomodoro)
+- Classic (25 min focus / 5 min break) and Flowtime (52/17) modes, configurable session count and skip-breaks toggle
+- Animated progress ring and session-progress dots on the running timer; Pause/Resume and Skip-phase controls
+- Optional task linking — attach a specific task to a session; starting it flips a `TODO` task to `IN_PROGRESS` automatically, and finishing the session offers a one-click "mark done"
+- Multi-course sessions — select more than one course and split the session count across them, or accept an automatic "mix in [course]" suggestion after a few consecutive same-course sessions
+- A floating countdown widget follows you to every other page while a session is active
+- Session history with total focus time and sessions-completed-this-week stats
+- Start/completion chimes synthesized with the Web Audio API — no audio files shipped
 
 ### Streak Tracking
 - Complete at least one task per day to maintain a streak
@@ -113,6 +129,47 @@ A full-stack academic productivity app built for university students. StudyHive 
 | course_id | BIGINT |
 | task_id | BIGINT |
 
+### grade_items
+| Column | Type | Notes |
+|--------|------|-------|
+| id | BIGINT | PK |
+| course_id | BIGINT | FK → courses |
+| user_id | BIGINT | FK → users |
+| name | VARCHAR | required |
+| weight | DOUBLE | required |
+| grade | DOUBLE | nullable — ungraded until entered |
+| expected_grade | DOUBLE | nullable — personal projection, separate from `grade` |
+
+### study_sessions
+| Column | Type | Notes |
+|--------|------|-------|
+| id | BIGINT | PK |
+| user_id | BIGINT | FK → users |
+| task_id | BIGINT | nullable, denormalized snapshot |
+| task_name | VARCHAR | nullable, denormalized snapshot |
+| mode | ENUM | CLASSIC, FLOWTIME |
+| planned_sessions | INT | |
+| focus_minutes | INT | |
+| break_minutes | INT | |
+| skip_breaks | BOOLEAN | |
+| started_at | TIMESTAMP | |
+| ended_at | TIMESTAMP | nullable — null while a session is active |
+| completed_sessions | INT | default 0 |
+
+### session_courses (join table)
+| Column | Type |
+|--------|------|
+| session_id | BIGINT |
+| course_id | BIGINT |
+
+### session_course_blocks
+| Column | Type | Notes |
+|--------|------|-------|
+| session_id | BIGINT | FK → study_sessions |
+| course_id | BIGINT | denormalized |
+| course_code | VARCHAR | denormalized |
+| session_count | INT | how many blocks of this session are this course's |
+
 ### activity_log
 | Column | Type | Notes |
 |--------|------|-------|
@@ -158,6 +215,23 @@ A full-stack academic productivity app built for university students. StudyHive 
 | POST | /api/tasks | Add a task |
 | PUT | /api/tasks/{id} | Edit a task |
 | DELETE | /api/tasks/{id} | Delete a task |
+
+### Grades (JWT required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/courses/{courseId}/grades | Get grade components for a course |
+| POST | /api/courses/{courseId}/grades | Add a grade component |
+| PUT | /api/courses/{courseId}/grades/{itemId} | Edit a grade component |
+| DELETE | /api/courses/{courseId}/grades/{itemId} | Delete a grade component |
+
+### Study Sessions (JWT required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/study-sessions | Start a session (rejects if one's already active) |
+| GET | /api/study-sessions/active | Get the current in-progress session, if any |
+| PUT | /api/study-sessions/{id}/progress | Increment completed session count |
+| PUT | /api/study-sessions/{id}/end | End a session |
+| GET | /api/study-sessions/history | Get past sessions |
 
 ### User (JWT required)
 | Method | Endpoint | Description |
@@ -219,10 +293,12 @@ mvn clean spring-boot:run
 ---
 
 ## Planned
-- Grade tracker with weighted average and target grade calculator
+- XP rewards and activity-log entries for completed study sessions
+- Weekly per-course study-time goals (e.g. "aim for 10-15 hrs/week"), tracked against `study_sessions` history
+- Study buddy connections — one-way, follow-style relationships between users
+- Live "studying now" status and joinable group study sessions, built on top of study buddies
 - Leaderboard within friend circles
-- Pomodoro timer with XP rewards
-- Social feed and study groups
+- Social feed — auto-generated accomplishment posts from streaks, levels, badges, and study sessions
 - AI study schedule generator
 
 ---

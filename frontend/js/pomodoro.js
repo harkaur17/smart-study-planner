@@ -16,6 +16,9 @@ let sessionHistory = null;
 let interleaveCourseId = null;
 let interleaveCourseName = null;
 let interleaveDismissed = false;
+let buddiesActiveInterval = null;
+let joinRequestInterval = null;
+let requestedSessionIds = [];
 
 const MODE_DEFAULTS = {
   CLASSIC: { focus: 25, break: 5 },
@@ -237,6 +240,121 @@ function updateInterleaveToggleUI(enabled) {
 
 updateInterleaveToggleUI(isInterleaveEnabled());
 
+function isShareEnabled() {
+  return localStorage.getItem("studyhive_share_enabled") === "true";
+}
+
+function toggleShare() {
+  const enabled = !isShareEnabled();
+  localStorage.setItem("studyhive_share_enabled", String(enabled));
+  updateShareToggleUI(enabled);
+}
+
+function updateShareToggleUI(enabled) {
+  document.getElementById("share-toggle-dot").style.left = enabled ? "18px" : "2px";
+  document.getElementById("share-toggle").style.background = enabled ? "#D2A050" : "#E8DDD0";
+}
+
+updateShareToggleUI(isShareEnabled());
+
+function buddyInitials(name) {
+  return name
+    .split(" ")
+    .map(function (n) {
+      return n[0];
+    })
+    .join("")
+    .toUpperCase();
+}
+
+function formatElapsed(startedAt) {
+  const minutes = Math.max(0, Math.round((Date.now() - new Date(startedAt).getTime()) / 60000));
+  const hours = Math.floor(minutes / 60);
+  return hours === 0 ? minutes + "m" : hours + "h " + (minutes % 60) + "m";
+}
+
+// ---- Buddies studying now (setup screen only) ----
+function loadBuddiesActive() {
+  apiGet("/api/study-sessions/buddies-active").then(function (buddies) {
+    const section = document.getElementById("buddies-active-section");
+    const list = document.getElementById("buddies-active-list");
+    if (!buddies || buddies.length === 0) {
+      section.style.display = "none";
+      return;
+    }
+    section.style.display = "block";
+    list.innerHTML = "";
+    buddies.forEach(function (b) {
+      const requested = requestedSessionIds.includes(b.sessionId);
+      const row = document.createElement("div");
+      row.className = "buddy-row";
+      row.innerHTML =
+        '<div class="buddy-identity">' +
+          '<div class="buddy-avatar">' + buddyInitials(b.name) + "</div>" +
+          "<div>" +
+            '<div class="buddy-name">' + b.name + "</div>" +
+            '<div class="buddy-username">' + (b.courseLabel ? b.courseLabel + " · " : "") + formatElapsed(b.startedAt) + "</div>" +
+          "</div>" +
+        "</div>" +
+        '<div class="buddy-actions">' +
+          '<button class="buddy-btn ' + (requested ? "pending" : "follow") + '"' + (requested ? " disabled" : "") + ' onclick="askToJoin(' + b.sessionId + ')">' +
+            (requested ? "Requested" : "Ask to join") +
+          "</button>" +
+        "</div>";
+      list.appendChild(row);
+    });
+  });
+}
+
+function askToJoin(sessionId) {
+  apiPost("/api/study-sessions/" + sessionId + "/join-requests", {}).then(function (result) {
+    if (result) {
+      requestedSessionIds.push(sessionId);
+      loadBuddiesActive();
+    }
+  });
+}
+
+// ---- Incoming join requests on the running timer (only when sharing) ----
+function loadJoinRequests() {
+  apiGet("/api/study-sessions/active/join-requests").then(function (requests) {
+    const banner = document.getElementById("join-request-banner");
+    const list = document.getElementById("join-request-list");
+    if (!requests || requests.length === 0) {
+      banner.style.display = "none";
+      return;
+    }
+    banner.style.display = "block";
+    list.innerHTML = "";
+    requests.forEach(function (r) {
+      const row = document.createElement("div");
+      row.className = "buddy-row";
+      row.innerHTML =
+        '<div class="buddy-identity">' +
+          '<div class="buddy-avatar">' + buddyInitials(r.requesterName) + "</div>" +
+          "<div>" +
+            '<div class="buddy-name">🙋 ' + r.requesterName + " wants to join</div>" +
+            '<div class="buddy-username">@' + r.requesterUsername + "</div>" +
+          "</div>" +
+        "</div>" +
+        '<div class="buddy-actions">' +
+          '<button class="buddy-btn accept" onclick="respondToJoinRequest(' + r.id + ', true)">Accept</button>' +
+          '<button class="buddy-btn decline" onclick="respondToJoinRequest(' + r.id + ', false)">Decline</button>' +
+        "</div>";
+      list.appendChild(row);
+    });
+  });
+}
+
+function respondToJoinRequest(requestId, accept) {
+  const request = accept
+    ? apiPut("/api/study-sessions/join-requests/" + requestId + "/accept", {})
+    : apiDelete("/api/study-sessions/join-requests/" + requestId);
+  request.then(function () {
+    loadJoinRequests();
+  });
+}
+
 function checkInterleaveSuggestion() {
   const banner = document.getElementById("interleave-banner");
 
@@ -385,6 +503,7 @@ function startSession() {
     focusMinutes: defaults.focus,
     breakMinutes: defaults.break,
     skipBreaks: skipBreaks,
+    shareWithBuddies: isShareEnabled(),
   }).then(function (session) {
     if (!session || !session.id) {
       alert("Could not start session. You may already have one active.");
@@ -404,6 +523,7 @@ function startSession() {
       taskId: session.taskId || null,
       taskName: session.taskName || null,
       cycleCourseCodes: buildCycleCourseCodes(session.courseBlocks, session.plannedSessions),
+      shareWithBuddies: session.shareWithBuddies || false,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     playSound("start");
@@ -411,11 +531,17 @@ function startSession() {
   });
 }
 
+function startBuddiesActivePolling() {
+  loadBuddiesActive();
+  buddiesActiveInterval = setInterval(loadBuddiesActive, 12000);
+}
+
 // ---- Check for an active session on page load ----
 const savedState = localStorage.getItem(STORAGE_KEY);
 if (savedState) {
   showTimerScreen();
 } else {
+  startBuddiesActivePolling();
   apiGet("/api/study-sessions/active").then(function (session) {
     if (session) {
       // reconstruct local state from what the server knows
@@ -432,6 +558,7 @@ if (savedState) {
         taskId: session.taskId || null,
         taskName: session.taskName || null,
         cycleCourseCodes: buildCycleCourseCodes(session.courseBlocks, session.plannedSessions),
+        shareWithBuddies: session.shareWithBuddies || false,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       showTimerScreen();
@@ -443,8 +570,15 @@ function showTimerScreen() {
   document.getElementById("setup-screen").style.display = "none";
   document.getElementById("history-section").style.display = "none";
   document.getElementById("timer-screen").style.display = "flex";
+  if (buddiesActiveInterval) clearInterval(buddiesActiveInterval);
   runTimer();
   tickInterval = setInterval(runTimer, 1000);
+
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (state && state.shareWithBuddies) {
+    loadJoinRequests();
+    joinRequestInterval = setInterval(loadJoinRequests, 10000);
+  }
 }
 
 // ---- Core timer loop: recompute from timestamps every tick ----
@@ -470,6 +604,8 @@ function runTimer() {
     if (state._justFinishedSession) {
       apiPut("/api/study-sessions/" + state.sessionId + "/end", {});
       clearInterval(tickInterval);
+      if (joinRequestInterval) clearInterval(joinRequestInterval);
+      document.getElementById("join-request-banner").style.display = "none";
       localStorage.removeItem(STORAGE_KEY);
       document.getElementById("phase-label").textContent = "Complete";
       document.getElementById("timer-display").textContent = "🎉";
@@ -586,6 +722,7 @@ function endSession() {
       function () {
         localStorage.removeItem(STORAGE_KEY);
         clearInterval(tickInterval);
+        if (joinRequestInterval) clearInterval(joinRequestInterval);
         location.reload();
       },
     );

@@ -1,3 +1,147 @@
+let currentBuddyTab = "following";
+let buddySearchTimeout = null;
+let isPrivateAccount = false;
+
+function renderPrivateToggle() {
+  document.getElementById("private-toggle-dot").style.left = isPrivateAccount ? "18px" : "2px";
+  document.getElementById("private-toggle").style.background = isPrivateAccount ? "#D2A050" : "#E8DDD0";
+}
+
+function togglePrivate() {
+  isPrivateAccount = !isPrivateAccount;
+  renderPrivateToggle();
+}
+
+function buddyInitials(name) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+}
+
+function buddyRowHTML(buddy, actionsHTML) {
+  return `
+    <div class="buddy-row">
+      <a class="buddy-identity" href="buddy-profile.html?id=${buddy.id}">
+        <div class="buddy-avatar">${buddyInitials(buddy.name)}</div>
+        <div>
+          <div class="buddy-name">${buddy.name}</div>
+          <div class="buddy-username">@${buddy.username}</div>
+        </div>
+      </a>
+      <div class="buddy-actions">${actionsHTML}</div>
+    </div>
+  `;
+}
+
+function followActionHTML(buddy) {
+  if (buddy.relationshipStatus === "ACCEPTED" || buddy.relationshipStatus === "FOLLOWING") {
+    return `<button class="buddy-btn" onclick="unfollowBuddy(${buddy.id})">Following ✕</button>`;
+  }
+  if (buddy.relationshipStatus === "PENDING") {
+    return `<button class="buddy-btn pending" onclick="unfollowBuddy(${buddy.id})">Requested ✕</button>`;
+  }
+  return `<button class="buddy-btn follow" onclick="followBuddy(${buddy.id})">Follow</button>`;
+}
+
+async function followBuddy(userId) {
+  await apiPost("/api/study-buddies/" + userId, {});
+  runBuddySearch();
+  loadBuddyCounts();
+}
+
+async function unfollowBuddy(userId) {
+  await apiDelete("/api/study-buddies/" + userId);
+  runBuddySearch();
+  loadBuddyTab(currentBuddyTab);
+  loadBuddyCounts();
+}
+
+async function acceptRequest(connectionId) {
+  await apiPut("/api/study-buddies/requests/" + connectionId + "/accept", {});
+  loadBuddyTab(currentBuddyTab);
+  loadBuddyCounts();
+}
+
+async function declineRequest(connectionId) {
+  await apiDelete("/api/study-buddies/requests/" + connectionId);
+  loadBuddyTab(currentBuddyTab);
+  loadBuddyCounts();
+}
+
+function switchBuddyTab(tab) {
+  currentBuddyTab = tab;
+  document.querySelectorAll(".buddy-tab").forEach((el) => el.classList.remove("active"));
+  document.getElementById("tab-" + tab).classList.add("active");
+  loadBuddyTab(tab);
+}
+
+async function loadBuddyTab(tab) {
+  const endpoint =
+    tab === "following"
+      ? "/api/study-buddies/following"
+      : tab === "followers"
+        ? "/api/study-buddies/followers"
+        : "/api/study-buddies/requests";
+
+  const list = await apiGet(endpoint);
+  const container = document.getElementById("buddy-list");
+
+  if (!list || list.length === 0) {
+    const emptyText =
+      tab === "following"
+        ? "Not following anyone yet."
+        : tab === "followers"
+          ? "No followers yet."
+          : "No pending requests.";
+    container.innerHTML = `<div class="buddy-empty">${emptyText}</div>`;
+    return;
+  }
+
+  container.innerHTML = list
+    .map((b) => {
+      if (tab === "requests") {
+        return buddyRowHTML(
+          b,
+          `<button class="buddy-btn accept" onclick="acceptRequest(${b.connectionId})">Accept</button>
+           <button class="buddy-btn decline" onclick="declineRequest(${b.connectionId})">Decline</button>`,
+        );
+      }
+      return buddyRowHTML(b, followActionHTML(b));
+    })
+    .join("");
+}
+
+async function loadBuddyCounts() {
+  const [following, followers, requests] = await Promise.all([
+    apiGet("/api/study-buddies/following"),
+    apiGet("/api/study-buddies/followers"),
+    apiGet("/api/study-buddies/requests"),
+  ]);
+  document.getElementById("following-count").textContent = (following || []).length;
+  document.getElementById("followers-count").textContent = (followers || []).length;
+  document.getElementById("requests-count").textContent = (requests || []).length;
+}
+
+async function runBuddySearch() {
+  const query = document.getElementById("buddy-search-input").value.trim();
+  const results = document.getElementById("buddy-search-results");
+
+  if (!query) {
+    results.innerHTML = "";
+    return;
+  }
+
+  const matches = await apiGet("/api/study-buddies/search?q=" + encodeURIComponent(query));
+  if (!matches || matches.length === 0) {
+    results.innerHTML = '<div class="buddy-empty">No users found.</div>';
+    return;
+  }
+
+  results.innerHTML = matches.map((b) => buddyRowHTML(b, followActionHTML(b))).join("");
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   requireAuth();
   loadSidebarUser();
@@ -90,6 +234,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("edit-program").value = user.program || "";
   document.getElementById("edit-year").value = user.yearLevel || "";
   document.getElementById("edit-username").value = user.username || "";
+  isPrivateAccount = !user.isPublic;
+  renderPrivateToggle();
 
   // save button
   document
@@ -104,6 +250,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         program: document.getElementById("edit-program").value,
         yearLevel: document.getElementById("edit-year").value,
         username: document.getElementById("edit-username").value,
+        isPublic: !isPrivateAccount,
       });
 
       btn.textContent = "Saved!";
@@ -114,4 +261,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       loadSidebarUser();
     });
+
+  // study buddies
+  loadBuddyTab(currentBuddyTab);
+  loadBuddyCounts();
+
+  document.getElementById("buddy-search-input").addEventListener("input", () => {
+    clearTimeout(buddySearchTimeout);
+    buddySearchTimeout = setTimeout(runBuddySearch, 300);
+  });
 });

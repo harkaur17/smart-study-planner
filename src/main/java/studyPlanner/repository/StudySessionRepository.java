@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface StudySessionRepository extends JpaRepository<StudySession, Long> {
     Optional<StudySession> findFirstByUserAndEndedAtIsNull(User user);
     List<StudySession> findByUserOrderByStartedAtDesc(User user);
+    List<StudySession> findByUserInAndEndedAtIsNullAndShareWithBuddiesTrue(List<User> users);
 }

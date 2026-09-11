@@ -22,6 +22,7 @@ public class UserController {
         public String program;
         public String yearLevel;
         public String username;
+        public Boolean isPublic;
     }
 
     @GetMapping("/me")
@@ -45,6 +46,9 @@ public class UserController {
             user.setYearLevel(request.yearLevel);
         if (request.username != null && !request.username.trim().isEmpty()) {
             user.setUsername(request.username);
+        }
+        if (request.isPublic != null) {
+            user.setPublic(request.isPublic);
         }
         userRepository.save(user);
         return ResponseEntity.ok(user);

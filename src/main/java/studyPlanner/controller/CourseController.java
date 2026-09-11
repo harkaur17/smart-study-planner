@@ -20,9 +20,13 @@ public class CourseController {
         public String name;
         public String code;
         public String color;
+        public String semester;
+        public Integer year;
         public String newName;
         public String newCode;
         public String newColor;
+        public String newSemester;
+        public Integer newYear;
     }
 
     // GET /api/courses - fetch all courses
@@ -35,7 +39,8 @@ public class CourseController {
     // POST /api/courses - add a course
     @PostMapping
     public ResponseEntity<Course> addCourse(@RequestBody CourseRequest request) {
-        Course course = courseService.addCourse(request.name, request.code, request.color);
+        Course course = courseService.addCourse(request.name, request.code, request.color,
+                request.semester, request.year);
         if (course != null) {
             return ResponseEntity.status(201).body(course);
         } else {
@@ -57,7 +62,8 @@ public class CourseController {
     // PUT /api/courses/{id} - edit a course
     @PutMapping("/{id}")
     public ResponseEntity<Course> editCourse(@PathVariable Long id, @RequestBody CourseRequest request) {
-        Course course = courseService.editCourse(id, request.newName, request.newCode, request.newColor);
+        Course course = courseService.editCourse(id, request.newName, request.newCode, request.newColor,
+                request.newSemester, request.newYear);
         if (course != null) {
             return ResponseEntity.ok(course);
         } else {

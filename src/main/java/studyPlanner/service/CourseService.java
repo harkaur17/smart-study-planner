@@ -49,13 +49,17 @@ public class CourseService {
     }
 
     // add a course
-    public Course addCourse(String name, String code, String color) {
+    public Course addCourse(String name, String code, String color, String semester, Integer year) {
         User user = getCurrentUser();
         Optional<Course> existing = courseRepository.findByCodeAndUser(code, user);
         if (existing.isPresent())
             return null;
         Course course = new Course(name, code, user);
         course.setColor(color != null && !color.trim().isEmpty() ? color : DEFAULT_COLOR);
+        if (semester != null && !semester.trim().isEmpty())
+            course.setSemester(semester);
+        if (year != null)
+            course.setYear(year);
 
         Course saved = courseRepository.save(course);
         user.setXpTotal(user.getXpTotal() + 5);
@@ -83,7 +87,8 @@ public class CourseService {
     }
 
     // edit a course
-    public Course editCourse(Long id, String newName, String newCode, String newColor) {
+    public Course editCourse(Long id, String newName, String newCode, String newColor,
+            String newSemester, Integer newYear) {
         User user = getCurrentUser();
         Optional<Course> optional = courseRepository.findById(id);
         if (!optional.isPresent())
@@ -99,6 +104,10 @@ public class CourseService {
         }
         if (newColor != null && !newColor.trim().isEmpty())
             course.setColor(newColor);
+        if (newSemester != null && !newSemester.trim().isEmpty())
+            course.setSemester(newSemester);
+        if (newYear != null)
+            course.setYear(newYear);
         return courseRepository.save(course);
     }
 

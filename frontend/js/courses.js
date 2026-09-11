@@ -32,6 +32,9 @@ saveBtn.addEventListener("click", function () {
   const name = document.getElementById("course-name").value;
   const code = document.getElementById("course-code").value;
   const color = document.getElementById("course-color").value;
+  const semester = document.getElementById("course-semester").value;
+  const yearValue = document.getElementById("course-year").value;
+  const year = yearValue ? Number(yearValue) : null;
 
   // Validate
   if (name.trim() === "") {
@@ -48,6 +51,8 @@ saveBtn.addEventListener("click", function () {
     name: name,
     code: code,
     color: color,
+    semester: semester,
+    year: year,
   };
 
   //Add course
@@ -64,6 +69,8 @@ saveBtn.addEventListener("click", function () {
       newName: name,
       newCode: code,
       newColor: color,
+      newSemester: semester,
+      newYear: year,
     }).then(function (data) {
       courses = courses.map(function (course) {
         if (course.id === editCourseId) {
@@ -72,8 +79,8 @@ saveBtn.addEventListener("click", function () {
             name: name,
             code: code,
             color: color,
-            semester: course.semester,
-            year: course.year,
+            semester: semester,
+            year: year,
           };
         }
         return course;
@@ -130,6 +137,8 @@ function openEditCourse(courseId) {
   document.getElementById("course-name").value = course.name;
   document.getElementById("course-code").value = course.code;
   document.getElementById("course-color").value = course.color || "#6B4C3B";
+  document.getElementById("course-semester").value = course.semester || "";
+  document.getElementById("course-year").value = course.year || "";
   editCourseId = courseId;
   modal.style.display = "flex";
 }
